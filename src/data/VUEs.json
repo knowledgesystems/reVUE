@@ -2,7 +2,7 @@
     {
         "hugoGeneSymbol": "APC",
         "genomicLocation": "5:g.112151184A>G",
-        "defaultEffect": "splice",
+        "defaultEffect": "synonymous",
         "comment": "Introduces splice acceptor site causing a frameshift",
         "pubmedIds": [29316426],
         "context": "Recurrent alteration in CRC",
@@ -57,8 +57,8 @@
         "hugoGeneSymbol": "MET",
         "genomicLocation": "Indels and substitutions flanking exon 14 (7:116411926_116412083del)",
         "defaultEffect": "splice",
-        "comment": "In-frame deletion event at intron10-exon 11 boundary",
-        "context": "Actionable in GIST",
+        "comment": "Skipping of exon 14",
+        "context": "Actionable in NSCLC",
         "pubmedIds": [27343443],
         "referenceText": "Schrock et al, 2014"
     },
