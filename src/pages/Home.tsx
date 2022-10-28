@@ -12,7 +12,7 @@ class Home extends React.Component<{}>
             <React.Fragment>
                 <div className="jumbotron jumbotron-fluid">
                     <h1 className="display-4">
-                        <img src={vueLogo} width={60} style={{paddingRight:10}}/>
+                        <img alt='reVUE logo' src={vueLogo} width={60} style={{paddingRight:10}}/>
                         reVUE
                     </h1>
                     <p className="lead">A Repository for Variants with Unexpected Effects (VUE) in Cancer</p>

@@ -25,7 +25,7 @@ class Header extends React.Component<{}>
                     <Container fluid={true}>
                         <Navbar.Brand>
                             <Link to="/" className="brand-title-link">
-                                <img src={vueLogo} width={40} style={{paddingRight:10}}/>
+                                <img alt='reVUE logo' src={vueLogo} width={40} style={{paddingRight:10}}/>
                                 reVUE
                             </Link>
                         </Navbar.Brand>
