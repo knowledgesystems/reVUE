@@ -8,7 +8,7 @@ class About extends React.Component<{}>
         return (
             <React.Fragment>
                 <h1>reVUE: repository for Variants with Unexpected Effects</h1>
-                <p>
+                <p className="text-justify">
                     Clinical sequencing of tumor samples has emerged as a
                     component of routine cancer care. By identifying genomic
                     alterations that contribute to tumor initiation or
@@ -49,7 +49,7 @@ class About extends React.Component<{}>
                     splice site mutations, precluding patients carrying these
                     mutations from receiving standard care imatinib. To address
                     this unmet clinical need, <b>we are building a novel
-                    bioinformatic application, REVUE, a REpository for Variants
+                    bioinformatic application, reVUE, a repository for Variants
                     with Unexpected Effects</b>. The application will curate and
                     store all VUE relevant information, be freely accessible via
                     an intuitive website and through an application programming
@@ -60,6 +60,7 @@ class About extends React.Component<{}>
                     implications for the subset of patients with cancers
                     harboring VUEs.
                 </p>
+                <p className="text-justify">Funding generously provided by <a href="https://www.the-ici-fund.org/recipients/details/revue-repository-for-variants-with-unexpected-effects">Innovation in Cancer Informatics (ICI)</a></p>
             </React.Fragment>
         );
     }
