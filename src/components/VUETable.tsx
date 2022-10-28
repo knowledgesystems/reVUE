@@ -1,6 +1,8 @@
 import React from 'react';
 import { default as VUEData } from './../data/VUEs.json';
 
+import vueLogo from "./../images/vue_logo.png";
+
 class VUETable extends React.Component<{}> {
     public render() {
         const DisplayData = VUEData.map((info) => {
@@ -24,7 +26,10 @@ class VUETable extends React.Component<{}> {
                             <th>Gene</th>
                             <th>Genomic Location</th>
                             <th>Default Effect</th>
-                            <th>Actual Effect</th>
+                            <th>
+                                <img alt='reVUE logo' src={vueLogo} width={20} style={{marginBottom:2}} />{' '}
+                                Actual Effect
+                            </th>
                             <th>Context & Reference</th>
                             {/*<th>Revised Example</th>*/}
                         </tr>
