@@ -25,7 +25,7 @@ class VUETable extends React.Component<{}> {
                         <tr>
                             <th>Gene</th>
                             <th>Genomic Location</th>
-                            <th>Default Effect</th>
+                            <th>Predicted Effect</th>
                             <th>
                                 <img alt='reVUE logo' src={vueLogo} width={20} style={{marginBottom:2}} />{' '}
                                 Actual Effect
