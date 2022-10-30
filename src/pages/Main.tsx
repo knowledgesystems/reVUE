@@ -7,6 +7,7 @@ import {
 import Header from "../components/Header";
 import Home from "./Home";
 import About from "./About";
+import Usage from './Usage';
 
 class Main extends React.Component<{}>
 {
@@ -26,6 +27,7 @@ class Main extends React.Component<{}>
                     >
                         <Routes>
                             <Route path="/" element={<Home />} />
+                            <Route path="/usage" element={<Usage />} />
                             <Route path="/about" element={<About />} />
                         </Routes>
                     </Container>

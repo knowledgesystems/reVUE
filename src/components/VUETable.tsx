@@ -13,7 +13,7 @@ class VUETable extends React.Component<{}> {
                     <td>{info.defaultEffect}</td>
                     <td>{info.comment}</td>
                     <td>{info.context}{info.referenceText && (<>{' '}<a href={`https://pubmed.ncbi.nlm.nih.gov/${info.pubmedIds[0]}/`} rel="noreferrer" target="_blank">({info.referenceText})</a></>)}</td>
-                    {/*<td><a href="https://www.genomenexus.org/variant/7:g.55249071C%3ET">Genome Nexus <i className="fa fa-external-link" /></a></td>*/}
+                    <td>{info.revisedProteinEffects && (<a href="https://deploy-preview-139--genome-nexus-frontend.netlify.app/variant/4:g.55593576_55593606del" rel="noreferrer" target="_blank">Genome Nexus <i className="fa fa-external-link" /></a>)}</td>
                 </tr>
             );
         });
@@ -31,7 +31,7 @@ class VUETable extends React.Component<{}> {
                                 Actual Effect
                             </th>
                             <th>Context & Reference</th>
-                            {/*<th>Revised Example</th>*/}
+                            <th>Usage Example</th>
                         </tr>
                     </thead>
                     <tbody>{DisplayData}</tbody>
