@@ -8,6 +8,7 @@ import Header from "../components/Header";
 import Home from "./Home";
 import About from "./About";
 import Usage from './Usage';
+import Variants from './Variants';
 
 class Main extends React.Component<{}>
 {
@@ -29,6 +30,7 @@ class Main extends React.Component<{}>
                             <Route path="/" element={<Home />} />
                             <Route path="/usage" element={<Usage />} />
                             <Route path="/about" element={<About />} />
+                            <Route path="/vue/:gene" element={<Variants />} />
                         </Routes>
                     </Container>
                 </div>

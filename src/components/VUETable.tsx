@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { default as VUEData } from './../data/VUEs.json';
 
 import vueLogo from "./../images/vue_logo.png";
@@ -8,7 +9,7 @@ class VUETable extends React.Component<{}> {
         const DisplayData = VUEData.map((info) => {
             return (
                 <tr>
-                    <td>{info.hugoGeneSymbol}</td>
+                    <td><Link to={`/vue/${info.hugoGeneSymbol}`}>{info.hugoGeneSymbol}</Link></td>
                     <td>{info.genomicLocation}</td>
                     <td>{info.defaultEffect}</td>
                     <td>{info.comment}</td>
