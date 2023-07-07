@@ -24,6 +24,12 @@ export default function Variants() {
                 <p>
                     <span style={{ fontWeight: 'bold' }}>Gene: </span>{gene}
                     <br/>
+                    <span style={{ fontWeight: 'bold' }}>Genomic Location: </span>{data.genomicLocation}
+                    <br/>
+                    <span style={{ fontWeight: 'bold' }}>Predicted Effect: </span>{data.defaultEffect}
+                    <br/>
+                    <span style={{ fontWeight: 'bold' }}>Actual Effect: </span>{data.comment}
+                    <br/>
                     <span style={{ fontWeight: 'bold' }}>Context & Reference: </span>{data.context}{' '}<a href={`https://pubmed.ncbi.nlm.nih.gov/${data.pubmedIds[0]}/`} rel="noreferrer" target="_blank">({data.referenceText})</a>
                 </p>
                 <table className="table table-striped">
