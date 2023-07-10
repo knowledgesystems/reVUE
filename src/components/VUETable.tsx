@@ -9,8 +9,8 @@ class VUETable extends React.Component<{}> {
         const DisplayData = VUEData.map((info) => {
             return (
                 <tr>
-                    <td><Link to={`/vue/${info.hugoGeneSymbol}`}>{info.hugoGeneSymbol}</Link></td>
-                    <td>{info.genomicLocation}</td>
+                    <td>{info.hugoGeneSymbol}</td>
+                    <td>{info.genomicLocation}{info.revisedProteinEffects.length > 1 && <Link to={`/vue/${info.hugoGeneSymbol}`}><button style={{ float: 'right' }}>View All</button></Link>}</td>
                     <td>{info.defaultEffect}</td>
                     <td>{info.comment}</td>
                     <td>{info.context}{info.referenceText && (<>{' '}<a href={`https://pubmed.ncbi.nlm.nih.gov/${info.pubmedIds[0]}/`} rel="noreferrer" target="_blank">({info.referenceText})</a></>)}</td>

@@ -6,7 +6,7 @@ export default function Variants() {
     const gene = useParams().gene
 
     const data = VUEData.find(i => i.hugoGeneSymbol === gene);
-    if (data) {
+    if (data && data.revisedProteinEffects.length > 1) {
         const DisplayData = 
             data.revisedProteinEffects.map((i) => {
                 return (
@@ -46,7 +46,5 @@ export default function Variants() {
             </div>
         );
     }
-    return (
-        <div>No variants found</div>
-    )
+    return <></>
 }
