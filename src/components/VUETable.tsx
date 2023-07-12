@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { VUE } from '../model/VUE';
 import { fetchVueData } from '../utils/VUEDataFetcherUtils';
+import "./VUETable.css";
 
 import vueLogo from "./../images/vue_logo.png";
 
@@ -21,7 +22,7 @@ export const VUETable: React.FC = () => {
         return (
             <tr>
                 <td>{info.hugoGeneSymbol}</td>
-                <td>{info.genomicLocation}{info.revisedProteinEffects.length > 1 && <Link to={`/vue/${info.hugoGeneSymbol}`} state={info}><button style={{ float: 'right' }}>View All</button></Link>}</td>
+                <td>{info.genomicLocation}{info.revisedProteinEffects.length > 1 && <Link style={{ marginLeft: '10px' }} to={`/vue/${info.hugoGeneSymbol}`} state={info}><button className='btn-sm'>View All</button></Link>}</td>
                 <td>{info.defaultEffect}</td>
                 <td>{info.comment}</td>
                 <td>{info.context}{info.referenceText && (<>{' '}<a href={`https://pubmed.ncbi.nlm.nih.gov/${info.pubmedIds[0]}/`} rel="noreferrer" target="_blank">({info.referenceText})</a></>)}</td>
@@ -32,7 +33,7 @@ export const VUETable: React.FC = () => {
 
     return (
         <div>
-            <table className="table table-striped">
+            <table className="table table-stripeds vue-table">
                 <thead>
                     <tr>
                         <th>Gene</th>
