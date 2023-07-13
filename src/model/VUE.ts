@@ -1,15 +1,20 @@
 export type VUE = {
     hugoGeneSymbol: string;
-    genomicLocation: string;
+    transcriptId: string;
+    genomicLocationDescription: string;
     defaultEffect: string;
     comment: string;
-    pubmedIds: number[];
     context: string;
-    referenceText: string;
     revisedProteinEffects: {
         variant: string;
+        genomicLocation: string;
         transcriptId: string;
+        vepPredictedProteinEffect: string;
+        vepPredictedVariantClassification: string;
         revisedProteinEffect: string;
-        variantClassification: string;
+        revisedVariantClassification: string;
+        pubmedId: number;
+        referenceText: string;
+        confirmed: boolean;
     }[];
 };
