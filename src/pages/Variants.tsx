@@ -1,32 +1,33 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { VUE } from '../model/VUE';
-import { fetchVueData } from '../utils/VUEDataFetcherUtils';
+import { DataStore } from '../store/DataStore';
+import { getLinks } from '../utils/VUEUtils';
 
-export const Variants: React.FC = () => {
-    const state = useLocation().state;
-    const [vue, setVue] = useState<VUE | undefined>(state);
+interface IVariantsProps {
+    store: DataStore;
+}
+
+export const Variants: React.FC<IVariantsProps> = (props) => {
+    const [variantData, setVariantData] = useState<VUE>();
 
     const gene = useParams().gene;
 
     useEffect(() => {
-        if (!state) {
-            const fetchData = async () => {
-                const data = await fetchVueData();
-                setVue(data.find(i => i.hugoGeneSymbol === gene));
-            };
-    
-            fetchData();
-        }
-    }, [gene, state]);
+        const setData = async () => {
+            setVariantData((await props.store.data).find(i => i.hugoGeneSymbol === gene));
+        };
+
+        setData();
+    });
 
     useLayoutEffect(() => {
         window.scrollTo(0, 0);
     })
 
-    if (vue && vue.revisedProteinEffects.length > 1) {
-        const DisplayData = 
-            vue.revisedProteinEffects.map((i) => {
+    if (variantData && variantData.revisedProteinEffects.length > 1) {
+        const displayData = 
+            variantData.revisedProteinEffects.map((i) => {
                 return (
                     <tr>
                         <td>{i.variant}</td>
@@ -39,35 +40,18 @@ export const Variants: React.FC = () => {
                 );
             })
 
-        const references: { referenceText: string, pubmedId: number }[] = [];
-        vue.revisedProteinEffects.map(v => ({ referenceText: v.referenceText, pubmedId: v.pubmedId })).filter(r => {
-            let i = references.findIndex(ref => (ref.referenceText === r.referenceText && ref.pubmedId === r.pubmedId))
-            if (i <= -1) {
-                references.push(r)
-            }
-            return null;
-        })
-
-        const links = references.map<React.ReactNode>(reference => 
-            (<>
-                <a href={`https://pubmed.ncbi.nlm.nih.gov/${reference.pubmedId}/`} rel="noreferrer" target="_blank">
-                    ({reference.referenceText})
-                </a>
-            </>)
-        ).reduce((prev, curr) => [prev, ', ', curr])
-
         return (
             <div>
                 <p>
-                    <span style={{ fontWeight: 'bold' }}>Gene: </span>{vue.hugoGeneSymbol}
+                    <span style={{ fontWeight: 'bold' }}>Gene: </span>{variantData.hugoGeneSymbol}
                     <br/>
-                    <span style={{ fontWeight: 'bold' }}>Genomic Location: </span>{vue.genomicLocationDescription}
+                    <span style={{ fontWeight: 'bold' }}>Genomic Location: </span>{variantData.genomicLocationDescription}
                     <br/>
-                    <span style={{ fontWeight: 'bold' }}>Predicted Effect: </span>{vue.defaultEffect}
+                    <span style={{ fontWeight: 'bold' }}>Predicted Effect: </span>{variantData.defaultEffect}
                     <br/>
-                    <span style={{ fontWeight: 'bold' }}>Actual Effect: </span>{vue.comment}
+                    <span style={{ fontWeight: 'bold' }}>Actual Effect: </span>{variantData.comment}
                     <br/>
-                    <span style={{ fontWeight: 'bold' }}>Context & References: </span>{vue.context}{' '}{links}
+                    <span style={{ fontWeight: 'bold' }}>Context & References: </span>{variantData.context}{' '}{getLinks(variantData)}
                 </p>
                 <table className="table table-striped">
                     <thead>
@@ -80,12 +64,12 @@ export const Variants: React.FC = () => {
                             <th>Revised Variant Classification</th>
                         </tr>
                     </thead>
-                    <tbody>{DisplayData}</tbody>
+                    <tbody>{displayData}</tbody>
                 </table>
             </div>
         );
     }
-    return <></>
+    return <></>;
 }
 
 export default Variants;

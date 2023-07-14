@@ -1,10 +1,14 @@
-
 import * as React from 'react';
 import VUETable from '../components/VUETable';
+import { DataStore } from '../store/DataStore';
 
 import vueLogo from "./../images/vue_logo.png";
 
-class Home extends React.Component<{}>
+interface IHomeProps {
+    store: DataStore;
+}
+
+class Home extends React.Component<IHomeProps>
 {
     public render()
     {
@@ -20,7 +24,7 @@ class Home extends React.Component<{}>
                     <span>A curated database of known protein effects for those variants that aren't as easily predicted by conventional annotation tools.</span>
                 </div>
                 <p className='text-left'>
-                    <VUETable />
+                    <VUETable store={this.props.store}/>
                 </p>
             </React.Fragment>
         );

@@ -9,9 +9,12 @@ import Home from "./Home";
 import About from "./About";
 import Usage from './Usage';
 import Variants from './Variants';
+import { DataStore } from '../store/DataStore';
 
 class Main extends React.Component<{}>
 {
+    private store: DataStore = new DataStore();
+
     public render()
     {
         return (
@@ -27,10 +30,10 @@ class Main extends React.Component<{}>
                         }}
                     >
                         <Routes>
-                            <Route path="/" element={<Home />} />
+                            <Route path="/" element={<Home store={this.store} />} />
                             <Route path="/usage" element={<Usage />} />
                             <Route path="/about" element={<About />} />
-                            <Route path="/vue/:gene" element={<Variants />} />
+                            <Route path="/vue/:gene" element={<Variants store={this.store} />} />
                         </Routes>
                     </Container>
                 </div>

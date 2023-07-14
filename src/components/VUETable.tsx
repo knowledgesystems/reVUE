@@ -1,49 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { VUE } from '../model/VUE';
-import { fetchVueData } from '../utils/VUEDataFetcherUtils';
+import { getLinks } from '../utils/VUEUtils';
 import "./VUETable.css";
-
 import vueLogo from "./../images/vue_logo.png";
+import { DataStore } from '../store/DataStore';
 
-export const VUETable: React.FC = () => {
+interface IVUETableProps {
+    store: DataStore;
+}
+
+export const VUETable: React.FC<IVUETableProps> = (props) => {
     const [vueData, setVueData] = useState<VUE[]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-          const data = await fetchVueData();
-          setVueData(data);
-        };
+        const setData = async () => {
+            setVueData(await props.store.data);
+        }
 
-        fetchData();
-    }, []);
+        setData();
+    });
 
-    const DisplayData = vueData.map((info) => {
-        const references: { referenceText: string, pubmedId: number }[] = [];
-        info.revisedProteinEffects.map(v => ({ referenceText: v.referenceText, pubmedId: v.pubmedId })).filter(r => {
-            let i = references.findIndex(ref => (ref.referenceText === r.referenceText && ref.pubmedId === r.pubmedId))
-            if (i === -1) {
-                references.push(r)
-            }
-            return null;
-        })
-
-        const links = references.map<React.ReactNode>(reference => 
-            (<>
-                <a href={`https://pubmed.ncbi.nlm.nih.gov/${reference.pubmedId}/`} rel="noreferrer" target="_blank">
-                    ({reference.referenceText})
-                </a>
-            </>)
-        ).reduce((prev, curr) => [prev, ', ', curr])
-
+    const displayData = vueData.map((info) => {
         return (
             <tr>
                 <td>{info.hugoGeneSymbol}</td>
-                <td>{info.genomicLocationDescription}{info.revisedProteinEffects.length > 1 && <Link style={{ marginLeft: '10px' }} to={`/vue/${info.hugoGeneSymbol}`} state={info}><button className='btn-sm'>View All</button></Link>}</td>
+                <td>{info.genomicLocationDescription}{info.revisedProteinEffects.length > 1 && <Link style={{ marginLeft: '10px' }} to={`/vue/${info.hugoGeneSymbol}`}>View All</Link>}</td>
                 <td>{info.defaultEffect}</td>
                 <td>{info.comment}</td>
-                <td>{info.context}{' '}{links}</td>
-                <td>{info.revisedProteinEffects && (<a href={`https://deploy-preview-139--genome-nexus-frontend.netlify.app/variant/${info.revisedProteinEffects[0].variant}`} rel="noreferrer" target="_blank">Genome Nexus <i className="fa fa-external-link" /></a>)}</td>
+                <td>{info.context}{' '}{getLinks(info)}</td>
+                <td>{info.revisedProteinEffects && (<a href={`https://www.genomenexus.org/variant/${info.revisedProteinEffects[0].variant}`} rel="noreferrer" target="_blank">Genome Nexus <i className="fa fa-external-link" /></a>)}</td>
             </tr>
         );
     });
@@ -64,7 +50,7 @@ export const VUETable: React.FC = () => {
                         <th>Usage Example</th>
                     </tr>
                 </thead>
-                <tbody>{DisplayData}</tbody>
+                <tbody>{displayData}</tbody>
             </table>
         </div>
     );
