@@ -36,6 +36,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                         <td>{i.vepPredictedVariantClassification}</td>
                         <td>{i.revisedProteinEffect}</td>
                         <td>{i.revisedVariantClassification}</td>
+                        <td><a href={`https://www.genomenexus.org/variant/${i.variant}`} rel="noreferrer" target="_blank">{i.variant}</a></td>
                     </tr>
                 );
             })
@@ -62,6 +63,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                             <th>Predicted Variant Classification by VEP</th>
                             <th>Revised Protein Effect</th>
                             <th>Revised Variant Classification</th>
+                            <th>Genome Nexus <i className="fa fa-external-link" /></th>
                         </tr>
                     </thead>
                     <tbody>{displayData}</tbody>

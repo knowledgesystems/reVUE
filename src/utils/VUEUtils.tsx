@@ -3,7 +3,7 @@ import { VUE } from "../model/VUE";
 export const fetchVueData = async (): Promise<VUE[]> => {
     try {
         const response = await fetch(
-            'https://raw.githubusercontent.com/knowledgesystems/reVUE-data/main/VUEs.json'
+            'https://raw.githubusercontent.com/knowledgesystems/reVUE-data/8a1f030ed47b7ec044192117bbbcf71ec528cbd7/VUEs.json'
         );
         const json = await response.json();
         return json;
