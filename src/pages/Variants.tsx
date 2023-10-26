@@ -30,13 +30,15 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
             variantData.revisedProteinEffects.map((i) => {
                 return (
                     <tr>
-                        <td>{i.variant}</td>
+                        <td><a href={`https://www.genomenexus.org/variant/${i.variant}`} rel="noreferrer" target="_blank">{i.variant}</a></td>
                         <td>{i.transcriptId}</td>
                         <td>{i.vepPredictedProteinEffect}</td>
                         <td>{i.vepPredictedVariantClassification}</td>
                         <td>{i.revisedProteinEffect}</td>
                         <td>{i.revisedVariantClassification}</td>
-                        <td><a href={`https://www.genomenexus.org/variant/${i.variant}`} rel="noreferrer" target="_blank">{i.variant}</a></td>
+                        <td><a href={`https://pubmed.ncbi.nlm.nih.gov/${i.pubmedId}/`} rel="noreferrer" target="_blank">
+                    ({i.referenceText})
+                </a></td>
                     </tr>
                 );
             })
@@ -57,13 +59,13 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                 <table className="table table-striped">
                     <thead>
                         <tr>
-                            <th>Variant</th>
+                            <th>Variant <i className="fa fa-external-link" /></th>
                             <th>Transcript Id</th>
                             <th>Predicted Protein Effect by VEP</th>
                             <th>Predicted Variant Classification by VEP</th>
                             <th>Revised Protein Effect</th>
                             <th>Revised Variant Classification</th>
-                            <th>Genome Nexus <i className="fa fa-external-link" /></th>
+                            <th>Context & References</th>
                         </tr>
                     </thead>
                     <tbody>{displayData}</tbody>
