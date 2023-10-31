@@ -29,7 +29,13 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
                 <td>{info.defaultEffect}</td>
                 <td>{info.comment}</td>
                 <td>{info.context ? `${info.context} (` : ``}{getLinks(info)}{info.context ? `)` : ``}</td>
-                <td>{info.revisedProteinEffects && (<a href={`https://www.genomenexus.org/variant/${info.revisedProteinEffects[0].variant}`} rel="noreferrer" target="_blank">Genome Nexus <i className="fa fa-external-link" /></a>)}</td>
+                <td>{info.revisedProteinEffects && (
+                    <>
+                        <a href={`https://www.genomenexus.org/variant/${info.revisedProteinEffects[0].variant}`} rel="noreferrer" target="_blank">Genome Nexus <i className="fa fa-external-link" /></a>
+                        <br />
+                        <a href={`https://www.cbioportal.org/results/mutations?cancer_study_list=msk_impact_2017%2Ccrc_msk_2017&Z_SCORE_THRESHOLD=2.0&RPPA_SCORE_THRESHOLD=2.0&profileFilter=mutations%2Cstructural_variants%2Ccna%2Cgistic&case_set_id=all&gene_list=${info.hugoGeneSymbol}&geneset_list=%20&tab_index=tab_visualize&Action=Submit`} rel="noreferrer" target="_blank">cBioPortal <i className="fa fa-external-link" /></a>
+                    </>)}
+                </td>
             </tr>
         );
     });
