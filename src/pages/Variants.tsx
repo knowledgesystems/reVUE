@@ -35,7 +35,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
             variantData.revisedProteinEffects.map((i) => {
                 return (
                     <tr>
-                        <td><a href={`https://www.genomenexus.org/variant/${i.variant}`} rel="noreferrer" target="_blank">{i.variant}</a></td>
+                        <td>{i.variant}</td>
                         <td>{i.transcriptId}</td>
                         <td>{i.vepPredictedProteinEffect}</td>
                         <td>{i.vepPredictedVariantClassification}</td>

@@ -4,6 +4,9 @@ import { VUE } from '../model/VUE';
 import { getLinks } from '../utils/VUEUtils';
 import "./VUETable.css";
 import vueLogo from "./../images/vue_logo.png";
+import gnLogo from '../images/gn-logo.png';
+import oncokbLogo from '../images/oncokb-logo.png';
+import cbioportalLogo from '../images/cbioportal-logo.png';
 import { DataStore } from '../store/DataStore';
 
 interface IVUETableProps {
@@ -31,9 +34,15 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
                 <td>{info.context ? `${info.context} (` : ``}{getLinks(info)}{info.context ? `)` : ``}</td>
                 <td>{info.revisedProteinEffects && (
                     <>
-                        <a href={`https://www.genomenexus.org/variant/${info.revisedProteinEffects[0].variant}`} rel="noreferrer" target="_blank">Genome Nexus <i className="fa fa-external-link" /></a>
-                        <br />
-                        <a href={`https://www.cbioportal.org/results/mutations?cancer_study_list=msk_impact_2017%2Ccrc_msk_2017&Z_SCORE_THRESHOLD=2.0&RPPA_SCORE_THRESHOLD=2.0&profileFilter=mutations%2Cstructural_variants%2Ccna%2Cgistic&case_set_id=all&gene_list=${info.hugoGeneSymbol}&geneset_list=%20&tab_index=tab_visualize&Action=Submit`} rel="noreferrer" target="_blank">cBioPortal <i className="fa fa-external-link" /></a>
+                        <a href={`https://www.genomenexus.org/variant/${info.revisedProteinEffects[0].variant}`} rel="noreferrer" target="_blank">
+                            <img src={gnLogo} alt="gn-logo" style={{height: 20, marginRight: 10}} />
+                        </a>
+                        <a href={`https://www.oncokb.org/hgvsg/${info.revisedProteinEffects[0].variant}`} rel="noreferrer" target="_blank">
+                            <img src={oncokbLogo} alt="oncokb-logo" style={{height: 16, marginRight: 10}} />
+                        </a>
+                        <a href={`https://www.cbioportal.org/results/mutations?cancer_study_list=msk_impact_2017%2Ccrc_msk_2017&Z_SCORE_THRESHOLD=2.0&RPPA_SCORE_THRESHOLD=2.0&profileFilter=mutations%2Cstructural_variants%2Ccna%2Cgistic&case_set_id=all&gene_list=${info.hugoGeneSymbol}&geneset_list=%20&tab_index=tab_visualize&Action=Submit`} rel="noreferrer" target="_blank">
+                            <img src={cbioportalLogo} alt="cbioportal-logo" style={{height: 16}} />
+                        </a>
                     </>)}
                 </td>
             </tr>
