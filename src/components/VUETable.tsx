@@ -40,7 +40,7 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
                         <a href={`https://www.oncokb.org/hgvsg/${info.revisedProteinEffects[0].variant}`} rel="noreferrer" target="_blank">
                             <img src={oncokbLogo} alt="oncokb-logo" style={{height: 16, marginRight: 10}} />
                         </a>
-                        <a href={`https://www.cbioportal.org/results/mutations?cancer_study_list=msk_impact_2017%2Ccrc_msk_2017&Z_SCORE_THRESHOLD=2.0&RPPA_SCORE_THRESHOLD=2.0&profileFilter=mutations%2Cstructural_variants%2Ccna%2Cgistic&case_set_id=all&gene_list=${info.hugoGeneSymbol}&geneset_list=%20&tab_index=tab_visualize&Action=Submit`} rel="noreferrer" target="_blank">
+                        <a href={`https://www.cbioportal.org/results/mutations?cancer_study_list=msk_impact_2017%2Ccrc_msk_2017&Z_SCORE_THRESHOLD=2.0&RPPA_SCORE_THRESHOLD=2.0&profileFilter=mutations%2Cstructural_variants%2Ccna%2Cgistic&case_set_id=all&gene_list=${info.hugoGeneSymbol}:${info.revisedProteinEffects[0].revisedProteinEffect.substring(2)}&geneset_list=%20&tab_index=tab_visualize&Action=Submit`} rel="noreferrer" target="_blank">
                             <img src={cbioportalLogo} alt="cbioportal-logo" style={{height: 16}} />
                         </a>
                     </>)}
