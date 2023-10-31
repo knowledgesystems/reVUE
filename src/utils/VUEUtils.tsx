@@ -3,7 +3,7 @@ import { VUE } from "../model/VUE";
 export const fetchVueData = async (): Promise<VUE[]> => {
     try {
         const response = await fetch(
-            'https://raw.githubusercontent.com/knowledgesystems/reVUE-data/8a1f030ed47b7ec044192117bbbcf71ec528cbd7/VUEs.json'
+            'https://raw.githubusercontent.com/knowledgesystems/reVUE-data/0890f20f69236ad6b113adbc145f4fe351fb4b7b/VUEs.json'
         );
         const json = await response.json();
         return json;
@@ -29,7 +29,7 @@ export const getLinks = (vue: VUE) => {
         (
             <>
                 <a href={`https://pubmed.ncbi.nlm.nih.gov/${reference.pubmedId}/`} rel="noreferrer" target="_blank">
-                    ({reference.referenceText})
+                    {reference.referenceText}
                 </a>
                 {(i !== uniqueReferences.length - 1) && ', '}
             </>

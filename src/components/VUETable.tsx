@@ -28,7 +28,7 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
                 <td>{info.genomicLocationDescription}{info.revisedProteinEffects.length > 1 && <Link style={{ marginLeft: '10px' }} to={`/vue/${info.hugoGeneSymbol}`}>View All</Link>}</td>
                 <td>{info.defaultEffect}</td>
                 <td>{info.comment}</td>
-                <td>{info.context}{' '}{getLinks(info)}</td>
+                <td>{info.context ? `${info.context} (` : ``}{getLinks(info)}{info.context ? `)` : ``}</td>
                 <td>{info.revisedProteinEffects && (<a href={`https://www.genomenexus.org/variant/${info.revisedProteinEffects[0].variant}`} rel="noreferrer" target="_blank">Genome Nexus <i className="fa fa-external-link" /></a>)}</td>
             </tr>
         );
