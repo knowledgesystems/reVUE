@@ -1,0 +1,28 @@
+.gene-page {
+    max-width: 85%;
+    display: inline-block;
+}
+
+.title {
+  text-align: left;
+  font-size: 2em;
+}
+.title-container {
+    margin-top: 25px;
+    overflow-x: auto;
+}
+
+.subtitle {
+  text-align: left;
+  font-size: 1.1em;
+}
+
+table {
+  text-align: left;
+  margin-top: 20px;
+}
+
+table td, table th {
+  padding: 5px;
+}
+

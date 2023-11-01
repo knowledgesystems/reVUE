@@ -13,6 +13,7 @@ export type VUE = {
         vepPredictedVariantClassification: string;
         revisedProteinEffect: string;
         revisedVariantClassification: string;
+        mutationOrigin: string,
         pubmedId: number;
         referenceText: string;
         confirmed: boolean;

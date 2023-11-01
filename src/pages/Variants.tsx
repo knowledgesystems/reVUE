@@ -2,7 +2,11 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { VUE } from '../model/VUE';
 import { DataStore } from '../store/DataStore';
-import { getLinks } from '../utils/VUEUtils';
+import { cbioportalLink, getLinks } from '../utils/VUEUtils';
+import { Container, Table } from 'react-bootstrap';
+import './Variants.css';
+import gnLogo from '../images/gn-logo.png';
+import oncokbLogo from '../images/oncokb-logo.png';
 
 interface IVariantsProps {
     store: DataStore;
@@ -36,37 +40,48 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                         <td>{i.vepPredictedVariantClassification}</td>
                         <td>{i.revisedProteinEffect}</td>
                         <td>{i.revisedVariantClassification}</td>
+                        <td>{i.mutationOrigin}</td>
+                        <td><a href={`https://pubmed.ncbi.nlm.nih.gov/${i.pubmedId}/`} rel="noreferrer" target="_blank">
+                            {i.referenceText}
+                            </a>
+                        </td>
+                        <td>
+                            <a href={`https://www.genomenexus.org/variant/${i.variant}`} rel="noreferrer" target="_blank">
+                                <img src={gnLogo} alt="gn-logo" style={{height: 20, marginRight: 10}} />
+                            </a>
+                            <a href={`https://www.oncokb.org/hgvsg/${i.variant}`} rel="noreferrer" target="_blank">
+                                <img src={oncokbLogo} alt="oncokb-logo" style={{height: 16, marginRight: 10}} />
+                            </a>
+                            {cbioportalLink(i.revisedProteinEffect.substring(2), gene)}
+                        </td>
                     </tr>
                 );
             })
 
         return (
-            <div>
-                <p>
-                    <span style={{ fontWeight: 'bold' }}>Gene: </span>{variantData.hugoGeneSymbol}
-                    <br/>
-                    <span style={{ fontWeight: 'bold' }}>Genomic Location: </span>{variantData.genomicLocationDescription}
-                    <br/>
-                    <span style={{ fontWeight: 'bold' }}>Predicted Effect: </span>{variantData.defaultEffect}
-                    <br/>
-                    <span style={{ fontWeight: 'bold' }}>Actual Effect: </span>{variantData.comment}
-                    <br/>
-                    <span style={{ fontWeight: 'bold' }}>Context & References: </span>{variantData.context}{' '}{getLinks(variantData)}
-                </p>
-                <table className="table table-striped">
+            <Container className="gene-page">
+                <div className="title-container">
+                <h1 className="title">{variantData.hugoGeneSymbol}</h1>
+                <h2 className="subtitle">Actual Effect: {variantData.comment}</h2>
+                <h3 className="subtitle">Context & References: {variantData.context}{' '}{getLinks(variantData)}</h3>
+                </div>
+                <Table striped bordered hover>
                     <thead>
                         <tr>
-                            <th>Variant</th>
+                        <   th>Variant <i className="fa fa-external-link" /></th>
                             <th>Transcript Id</th>
                             <th>Predicted Protein Effect by VEP</th>
                             <th>Predicted Variant Classification by VEP</th>
                             <th>Revised Protein Effect</th>
                             <th>Revised Variant Classification</th>
+                            <th>Mutation Origin</th>
+                            <th>Context & References</th>
+                            <th>Linkouts</th>
                         </tr>
                     </thead>
                     <tbody>{displayData}</tbody>
-                </table>
-            </div>
+                </Table>
+            </Container>
         );
     }
     return <></>;

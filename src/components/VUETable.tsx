@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { VUE } from '../model/VUE';
-import { getLinks } from '../utils/VUEUtils';
+import { cbioportalLink, getLinks } from '../utils/VUEUtils';
 import "./VUETable.css";
 import vueLogo from "./../images/vue_logo.png";
+import gnLogo from '../images/gn-logo.png';
+import oncokbLogo from '../images/oncokb-logo.png';
 import { DataStore } from '../store/DataStore';
 
 interface IVUETableProps {
@@ -28,8 +30,18 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
                 <td>{info.genomicLocationDescription}{info.revisedProteinEffects.length > 1 && <Link style={{ marginLeft: '10px' }} to={`/vue/${info.hugoGeneSymbol}`}>View All</Link>}</td>
                 <td>{info.defaultEffect}</td>
                 <td>{info.comment}</td>
-                <td>{info.context}{' '}{getLinks(info)}</td>
-                <td>{info.revisedProteinEffects && (<a href={`https://www.genomenexus.org/variant/${info.revisedProteinEffects[0].variant}`} rel="noreferrer" target="_blank">Genome Nexus <i className="fa fa-external-link" /></a>)}</td>
+                <td>{info.context ? `${info.context} (` : ``}{getLinks(info)}{info.context ? `)` : ``}</td>
+                <td>{info.revisedProteinEffects && (
+                    <>
+                        <a href={`https://www.genomenexus.org/variant/${info.revisedProteinEffects[0].variant}`} rel="noreferrer" target="_blank">
+                            <img src={gnLogo} alt="gn-logo" style={{height: 20, marginRight: 10}} />
+                        </a>
+                        <a href={`https://www.oncokb.org/hgvsg/${info.revisedProteinEffects[0].variant}`} rel="noreferrer" target="_blank">
+                            <img src={oncokbLogo} alt="oncokb-logo" style={{height: 16, marginRight: 10}} />
+                        </a>
+                        {cbioportalLink(info.revisedProteinEffects[0].revisedProteinEffect.substring(2), info.hugoGeneSymbol)}
+                    </>)}
+                </td>
             </tr>
         );
     });
