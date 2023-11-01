@@ -1,4 +1,18 @@
 import { VUE } from "../model/VUE";
+import cbioportalLogo from "../images/cbioportal-logo.png";
+
+export const cbioportalLink = (proteinChange: string, gene?: string, ) => {
+    // for now only show APC and CTNNB1
+    const geneList = ['APC', 'CTNNB1'];
+    if (gene !== undefined && geneList.includes(gene)) {
+        return <a href={`https://www.cbioportal.org/results/mutations?cancer_study_list=msk_impact_2017%2Ccrc_msk_2017&Z_SCORE_THRESHOLD=2.0&RPPA_SCORE_THRESHOLD=2.0&profileFilter=mutations%2Cstructural_variants%2Ccna%2Cgistic&case_set_id=all&gene_list=${gene}:${proteinChange}&geneset_list=%20&tab_index=tab_visualize&Action=Submit`} rel="noreferrer" target="_blank">
+                    <img src={cbioportalLogo} alt="cbioportal-logo" style={{height: 16}} />
+               </a>;
+    }
+    else {
+        return <></>;
+    }
+} 
 
 export const fetchVueData = async (): Promise<VUE[]> => {
     try {
