@@ -17,7 +17,7 @@ export const cbioportalLink = (proteinChange: string, gene?: string, ) => {
 export const fetchVueData = async (): Promise<VUE[]> => {
     try {
         const response = await fetch(
-            'https://raw.githubusercontent.com/knowledgesystems/reVUE-data/3debd1e24e403a233bb496b14dd4cdf010ff9d33/VUEs.json'
+            'https://raw.githubusercontent.com/knowledgesystems/reVUE-data/ddcb06f417209eb6cf602dd1291a4bb605b4bd6f/VUEs.json'
         );
         const json = await response.json();
         return json;
