@@ -41,9 +41,9 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                         <td>{i.revisedProteinEffect}</td>
                         <td>{i.revisedVariantClassification}</td>
                         <td>{i.mutationOrigin}</td>
-                        <td><a href={`https://pubmed.ncbi.nlm.nih.gov/${i.pubmedId}/`} rel="noreferrer" target="_blank">
+                        <td>{i.pubmedId === 0 ? <>{i.referenceText}</> : <a href={`https://pubmed.ncbi.nlm.nih.gov/${i.pubmedId}/`} rel="noreferrer" target="_blank">
                             {i.referenceText}
-                            </a>
+                            </a>}
                         </td>
                         <td>
                             <a href={`https://www.genomenexus.org/variant/${i.variant}`} rel="noreferrer" target="_blank">
@@ -62,8 +62,8 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
             <Container className="gene-page">
                 <div className="title-container">
                 <h1 className="title">{variantData.hugoGeneSymbol}</h1>
-                <h2 className="subtitle">Actual Effect: {variantData.comment}</h2>
-                <h3 className="subtitle">Context & References: {variantData.context}{' '}{getLinks(variantData)}</h3>
+                <h2 className="subtitle" style={{fontWeight: "bold"}}>Actual Effect: <span style={{fontWeight: "normal"}}>{variantData.comment}</span></h2>
+                <h3 className="subtitle" style={{fontWeight: "bold"}}>Context & References: <span style={{fontWeight: "normal"}}>{variantData.context}{' '}{getLinks(variantData)}</span></h3>
                 </div>
                 <Table striped bordered hover>
                     <thead>

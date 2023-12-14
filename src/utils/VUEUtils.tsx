@@ -17,7 +17,7 @@ export const cbioportalLink = (proteinChange: string, gene?: string, ) => {
 export const fetchVueData = async (): Promise<VUE[]> => {
     try {
         const response = await fetch(
-            'https://raw.githubusercontent.com/knowledgesystems/reVUE-data/main/VUEs.json'
+            'https://raw.githubusercontent.com/knowledgesystems/reVUE-data/3debd1e24e403a233bb496b14dd4cdf010ff9d33/VUEs.json'
         );
         const json = await response.json();
         return json;
@@ -39,16 +39,16 @@ export const getLinks = (vue: VUE) => {
         }
     })
 
-    const links = uniqueReferences.map((reference, i) => 
-        (
+    const links = uniqueReferences.map((reference, i) =>{
+        // pubmedId = 0 means this variant is reported by users and does not have any paper as reference
+        return reference.pubmedId === 0 ? <>{reference.referenceText}</> :
             <>
                 <a href={`https://pubmed.ncbi.nlm.nih.gov/${reference.pubmedId}/`} rel="noreferrer" target="_blank">
                     {reference.referenceText}
                 </a>
-                {(i !== uniqueReferences.length - 1) && ', '}
-            </>
-        )
-    )
+                {(i !== uniqueReferences.length - 1) && '; '}
+            </> 
+    } )
 
     return links;
 }
