@@ -26,3 +26,9 @@ table td, table th {
   padding: 5px;
 }
 
+.tooltip > .tooltip-inner {
+  background-color: white; 
+  color: black; 
+  border-color: black;
+  border: 1px solid black;
+}

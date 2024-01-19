@@ -16,6 +16,9 @@ export type VUE = {
         mutationOrigin: string,
         pubmedId: number;
         referenceText: string;
+        germlineVariantsCount: number;
+        somaticVariantsCount: number;
+        unknownMutationStatusVariantsCount: number;
         confirmed: boolean;
     }[];
 };

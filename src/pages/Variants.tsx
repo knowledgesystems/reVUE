@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { VUE } from '../model/VUE';
 import { DataStore } from '../store/DataStore';
 import { cbioportalLink, getLinks } from '../utils/VUEUtils';
-import { Container, Table } from 'react-bootstrap';
+import { Container, OverlayTrigger, Table, Tooltip } from 'react-bootstrap';
 import './Variants.css';
 import gnLogo from '../images/gn-logo.png';
 import oncokbLogo from '../images/oncokb-logo.png';
@@ -41,6 +41,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                         <td>{i.revisedProteinEffect}</td>
                         <td>{i.revisedVariantClassification}</td>
                         <td>{i.mutationOrigin}</td>
+                        <td>{`${i.germlineVariantsCount}${` / `}${i.somaticVariantsCount}${` / `}${i.unknownMutationStatusVariantsCount}`}</td>
                         <td>{i.pubmedId === 0 ? <>{i.referenceText}</> : <a href={`https://pubmed.ncbi.nlm.nih.gov/${i.pubmedId}/`} rel="noreferrer" target="_blank">
                             {i.referenceText}
                             </a>}
@@ -65,7 +66,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                 <h2 className="subtitle" style={{fontWeight: "bold"}}>Actual Effect: <span style={{fontWeight: "normal"}}>{variantData.comment}</span></h2>
                 <h3 className="subtitle" style={{fontWeight: "bold"}}>Context & References: <span style={{fontWeight: "normal"}}>{variantData.context}{' '}{getLinks(variantData)}</span></h3>
                 </div>
-                <Table striped bordered hover>
+                <Table striped bordered hover responsive>
                     <thead>
                         <tr>
                         <   th>Variant <i className="fa fa-external-link" /></th>
@@ -75,6 +76,19 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                             <th>Revised Protein Effect</th>
                             <th>Revised Variant Classification</th>
                             <th>Mutation Origin</th>
+                            <th>Variants Count (Germline/Somatic/Unknown)
+                                <OverlayTrigger
+                                    placement="right"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={
+                                        <Tooltip color='light' id="button-tooltip">
+                                            Counting from MSK-IMPACT and TCGA Pan-Cancer Atlas
+                                        </Tooltip>}
+                                    >
+                                    <i className={'fa fa-info-circle'} />
+                                </OverlayTrigger>
+
+                            </th>
                             <th>Context & References</th>
                             <th>Linkouts</th>
                         </tr>
