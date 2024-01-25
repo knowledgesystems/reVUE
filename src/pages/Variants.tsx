@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { VUE } from '../model/VUE';
+import { RevisedProteinEffect, VUE } from '../model/VUE';
 import { DataStore } from '../store/DataStore';
 import { cbioportalLink, getLinks } from '../utils/VUEUtils';
 import { Container, OverlayTrigger, Table, Tooltip } from 'react-bootstrap';
@@ -16,6 +16,11 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
     const [variantData, setVariantData] = useState<VUE>();
 
     const gene = useParams().gene;
+    let countInitialized = false;
+    let mskTotalSampleCount = 0;
+    let mskGeneSampleCount = 0;
+    let tcgaTotalSampleCount = 0;
+    let tcgaGeneSampleCount = 0;
 
     useEffect(() => {
         const setData = async () => {
@@ -29,9 +34,22 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
         window.scrollTo(0, 0);
     })
 
-    if (variantData && variantData.revisedProteinEffects.length > 1) {
+    function updateCount(revisedProteinEffect: RevisedProteinEffect) {
+        if (!countInitialized) {
+            mskTotalSampleCount = revisedProteinEffect.counts["mskimpact"].totalSampleCount;
+            mskGeneSampleCount = revisedProteinEffect.counts["mskimpact"].geneSampleCount;
+            tcgaTotalSampleCount = revisedProteinEffect.counts["tcga"].totalSampleCount;
+            tcgaGeneSampleCount = revisedProteinEffect.counts["tcga"].geneSampleCount;
+            countInitialized = true;
+        }
+    }
+
+    if (variantData && variantData.revisedProteinEffects.length > 0) {
         const displayData = 
-            variantData.revisedProteinEffects.map((i) => {
+            variantData.revisedProteinEffects
+            .sort((a, b) => (b.counts["mskimpact"].germlineVariantsCount + b.counts["mskimpact"].somaticVariantsCount + b.counts["mskimpact"].unknownVariantsCount) - (a.counts["mskimpact"].germlineVariantsCount + a.counts["mskimpact"].somaticVariantsCount + a.counts["mskimpact"].unknownVariantsCount))
+            .map((i) => {
+                updateCount(i);
                 return (
                     <tr>
                         <td>{i.variant}</td>
@@ -41,7 +59,8 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                         <td>{i.revisedProteinEffect}</td>
                         <td>{i.revisedVariantClassification}</td>
                         <td>{i.mutationOrigin}</td>
-                        <td>{`${i.germlineVariantsCount}${` / `}${i.somaticVariantsCount}${` / `}${i.unknownMutationStatusVariantsCount}`}</td>
+                        <td>{`${i.counts["mskimpact"]?.germlineVariantsCount}${` / `}${i.counts["mskimpact"]?.somaticVariantsCount}${` / `}${i.counts["mskimpact"]?.unknownVariantsCount}`}</td>
+                        <td>{`${i.counts["tcga"]?.germlineVariantsCount}${` / `}${i.counts["tcga"].somaticVariantsCount}${` / `}${i.counts["tcga"].unknownVariantsCount}`}</td>
                         <td>{i.pubmedId === 0 ? <>{i.referenceText}</> : <a href={`https://pubmed.ncbi.nlm.nih.gov/${i.pubmedId}/`} rel="noreferrer" target="_blank">
                             {i.referenceText}
                             </a>}
@@ -75,19 +94,34 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                             <th>Predicted Variant Classification by VEP</th>
                             <th>Revised Protein Effect</th>
                             <th>Revised Variant Classification</th>
-                            <th>Mutation Origin</th>
-                            <th>Variants Count (Germline/Somatic/Unknown)
+                            <th>Mutation Status</th>
+                            <th>MSK-IMPACT Variants Count (Germline/Somatic/Unknown)
                                 <OverlayTrigger
                                     placement="right"
                                     delay={{ show: 250, hide: 400 }}
                                     overlay={
                                         <Tooltip color='light' id="button-tooltip">
-                                            Counting from MSK-IMPACT and TCGA Pan-Cancer Atlas
+                                            Total sample count: {mskTotalSampleCount}
+                                            <br/>
+                                            {variantData.hugoGeneSymbol} sample count: {mskGeneSampleCount}
                                         </Tooltip>}
                                     >
                                     <i className={'fa fa-info-circle'} />
                                 </OverlayTrigger>
-
+                            </th>
+                            <th>TCGA Pan-Cancer Atlas Variants Count (Germline/Somatic/Unknown)
+                                <OverlayTrigger
+                                    placement="right"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={
+                                        <Tooltip color='light' id="button-tooltip">
+                                            Total sample count: {tcgaTotalSampleCount}
+                                            <br/>
+                                            {variantData.hugoGeneSymbol} sample count: {tcgaGeneSampleCount}
+                                        </Tooltip>}
+                                    >
+                                    <i className={'fa fa-info-circle'} />
+                                </OverlayTrigger>
                             </th>
                             <th>Context & References</th>
                             <th>Linkouts</th>

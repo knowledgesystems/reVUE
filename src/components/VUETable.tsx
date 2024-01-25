@@ -26,8 +26,8 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
     const displayData = vueData.map((info) => {
         return (
             <tr>
-                <td>{info.hugoGeneSymbol}</td>
-                <td>{info.genomicLocationDescription}{info.revisedProteinEffects.length > 1 && <Link style={{ marginLeft: '10px' }} to={`/vue/${info.hugoGeneSymbol}`}>View All</Link>}</td>
+                <td><Link to={`/vue/${info.hugoGeneSymbol}`}>{info.hugoGeneSymbol}</Link></td>
+                <td>{info.genomicLocationDescription}</td>
                 <td>{info.defaultEffect}</td>
                 <td>{info.comment}</td>
                 <td>{info.context ? `${info.context} (` : ``}{getLinks(info)}{info.context ? `)` : ``}</td>
