@@ -61,7 +61,7 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
                             <img alt='reVUE logo' src={vueLogo} width={20} style={{marginBottom:2}} />{' '}
                             Actual Effect
                         </th>
-                        <th>Example Protein Change</th>
+                        <th>Example Revised Protein Change</th>
                         <th>Context & References</th>
                         <th>Usage Example</th>
                     </tr>

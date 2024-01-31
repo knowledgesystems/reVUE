@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { RevisedProteinEffect, VUE } from '../model/VUE';
 import { DataStore } from '../store/DataStore';
-import { cbioportalLink, revisedProteinEffectSortingFn, getContextReferences } from '../utils/VUEUtils';
+import { cbioportalLink, revisedProteinEffectSortingFn } from '../utils/VUEUtils';
 import { Container, OverlayTrigger, Table, Tooltip } from 'react-bootstrap';
 import './Variants.css';
 import gnLogo from '../images/gn-logo.png';
@@ -69,8 +69,9 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                             </a>
                             {cbioportalLink(i.revisedProteinEffect.substring(2), gene)}
                         </td>
-                        <td>
-                            {getContextReferences(variantData, true)}
+                        <td>{i.pubmedId === 0 ? <>{i.referenceText}</> : <a href={`https://pubmed.ncbi.nlm.nih.gov/${i.pubmedId}/`} rel="noreferrer" target="_blank">
+                            {i.referenceText}
+                            </a>}
                         </td>
                     </tr>
                 );
