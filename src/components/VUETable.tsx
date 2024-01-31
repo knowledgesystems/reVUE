@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { VUE } from '../model/VUE';
-import { cbioportalLink, getLinks } from '../utils/VUEUtils';
+import { cbioportalLink, getContextReferences } from '../utils/VUEUtils';
 import "./VUETable.css";
 import vueLogo from "./../images/vue_logo.png";
 import gnLogo from '../images/gn-logo.png';
 import oncokbLogo from '../images/oncokb-logo.png';
 import { DataStore } from '../store/DataStore';
+import { Table } from 'react-bootstrap';
 
 interface IVUETableProps {
     store: DataStore;
@@ -25,12 +26,13 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
 
     const displayData = vueData.map((info) => {
         return (
-            <tr>
-                <td>{info.hugoGeneSymbol}</td>
-                <td>{info.genomicLocationDescription}{info.revisedProteinEffects.length > 1 && <Link style={{ marginLeft: '10px' }} to={`/vue/${info.hugoGeneSymbol}`}>View All</Link>}</td>
+            <tr >
+                <td><Link to={`/vue/${info.hugoGeneSymbol}`}>{info.hugoGeneSymbol}</Link></td>
+                <td>{info.genomicLocationDescription}</td>
                 <td>{info.defaultEffect}</td>
                 <td>{info.comment}</td>
-                <td>{info.context ? `${info.context} (` : ``}{getLinks(info)}{info.context ? `)` : ``}</td>
+                <td>{info.revisedProteinEffects.length > 0 ? info.revisedProteinEffects[0].revisedProteinEffect : ""}</td>
+                <td>{getContextReferences(info)}</td>
                 <td>{info.revisedProteinEffects && (
                     <>
                         <a href={`https://www.genomenexus.org/variant/${info.revisedProteinEffects[0].variant}`} rel="noreferrer" target="_blank">
@@ -48,7 +50,8 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
 
     return (
         <div>
-            <table className="table table-stripeds vue-table">
+            <Table  bordered hover responsive className='vue-table'>
+            {/* <table className="table table-stripeds vue-table"> */}
                 <thead>
                     <tr>
                         <th>Gene</th>
@@ -58,12 +61,13 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
                             <img alt='reVUE logo' src={vueLogo} width={20} style={{marginBottom:2}} />{' '}
                             Actual Effect
                         </th>
+                        <th>Example Revised Protein Change</th>
                         <th>Context & References</th>
                         <th>Usage Example</th>
                     </tr>
                 </thead>
                 <tbody>{displayData}</tbody>
-            </table>
+            </Table>
         </div>
     );
 }

@@ -5,17 +5,29 @@ export type VUE = {
     defaultEffect: string;
     comment: string;
     context: string;
-    revisedProteinEffects: {
-        variant: string;
-        genomicLocation: string;
-        transcriptId: string;
-        vepPredictedProteinEffect: string;
-        vepPredictedVariantClassification: string;
-        revisedProteinEffect: string;
-        revisedVariantClassification: string;
-        mutationOrigin: string,
-        pubmedId: number;
-        referenceText: string;
-        confirmed: boolean;
-    }[];
+    revisedProteinEffects: RevisedProteinEffect[];
 };
+
+export type RevisedProteinEffect = {
+    variant: string;
+    genomicLocation: string;
+    transcriptId: string;
+    vepPredictedProteinEffect: string;
+    vepPredictedVariantClassification: string;
+    revisedProteinEffect: string;
+    revisedVariantClassification: string;
+    mutationOrigin: string,
+    pubmedId: number;
+    referenceText: string;
+    germlineVariantsCount: number;
+    somaticVariantsCount: number;
+    unknownMutationStatusVariantsCount: number;
+    confirmed: boolean;
+    counts: {[cohort: string]: {
+        germlineVariantsCount: number;
+        somaticVariantsCount: number;
+        unknownVariantsCount: number;
+        totalSampleCount: number;
+        geneSampleCount: number;
+    }}
+}

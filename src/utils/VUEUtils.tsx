@@ -1,5 +1,10 @@
-import { VUE } from "../model/VUE";
+import { RevisedProteinEffect, VUE } from "../model/VUE";
 import cbioportalLogo from "../images/cbioportal-logo.png";
+
+export type Reference = {
+    referenceText: string;
+    pubmedId: number;
+};
 
 export const cbioportalLink = (proteinChange: string, gene?: string, ) => {
     // for now only show APC and CTNNB1
@@ -19,16 +24,20 @@ export const fetchVueData = async (): Promise<VUE[]> => {
         const response = await fetch(
             'https://raw.githubusercontent.com/knowledgesystems/reVUE-data/main/VUEs.json'
         );
-        const json = await response.json();
-        return json;
+        const vues: VUE[] = await response.json();
+        // Sort revisedProteinEffects by counts
+        for (const vue of vues) {
+            vue.revisedProteinEffects = vue.revisedProteinEffects.sort(revisedProteinEffectSortingFn);
+        }
+        return vues;
     } catch (error) {
         console.error('Error fetching JSON:', error);
         return [];
     }
 };
 
-export const getLinks = (vue: VUE) => {
-    const uniqueReferences: { referenceText: string, pubmedId: number }[] = [];
+export const getReferencesText = (vue: VUE) => {
+    const uniqueReferences: Reference[] = [];
     vue.revisedProteinEffects.forEach(v => {
         let i = uniqueReferences.findIndex(ref => (ref.referenceText === v.referenceText && ref.pubmedId === v.pubmedId))
         if (i === -1) {
@@ -38,17 +47,62 @@ export const getLinks = (vue: VUE) => {
             });
         }
     })
+    return uniqueReferences;
+}
 
-    const links = uniqueReferences.map((reference, i) => 
-        (
+export const getLinks = (references: Reference[]) => {
+    const links = references.map((reference, i) =>{
+        // pubmedId = 0 means this variant is reported by users and does not have any paper as reference
+        return reference.pubmedId === 0 ? <>{reference.referenceText}</> :
             <>
                 <a href={`https://pubmed.ncbi.nlm.nih.gov/${reference.pubmedId}/`} rel="noreferrer" target="_blank">
                     {reference.referenceText}
                 </a>
-                {(i !== uniqueReferences.length - 1) && ', '}
-            </>
-        )
-    )
+                {(i !== references.length - 1) && '; '}
+            </> 
+    } )
 
     return links;
 }
+
+export const getContextReferences = (vue: VUE, referenceOnly?: boolean) => {
+    let context = vue.context || "";
+    let referencesWithoutLinkTextList = [];
+    const referencesWithLink = [];
+    for (const reference of getReferencesText(vue)) {
+        if (reference.pubmedId === 0) {
+            referencesWithoutLinkTextList.push(reference.referenceText);
+        } else {
+            const splitedReferenceText = reference.referenceText.split(';');
+            if (splitedReferenceText.length === 2) {
+                referencesWithoutLinkTextList.push(splitedReferenceText[0]);
+                referencesWithLink.push({
+                    referenceText: splitedReferenceText[1],
+                    pubmedId: reference.pubmedId
+                })
+            } else {
+                referencesWithLink.push(reference);
+            }
+        }
+    }
+    const referencesWithoutLinkText = referencesWithoutLinkTextList.length > 0 ? referencesWithoutLinkTextList.join("; ") + "; ": "";
+    if (context) {
+        return (
+            <>
+                {!referenceOnly && `${context} (`}
+                {referencesWithoutLinkText}
+                {getLinks(referencesWithLink)}
+                {!referenceOnly &&`)`}
+            </>
+        );
+    } else {
+        return (
+            <>
+                {referencesWithoutLinkText}
+                {getLinks(referencesWithLink)}
+            </>
+        );
+    }
+}
+
+export const revisedProteinEffectSortingFn = (a: RevisedProteinEffect, b: RevisedProteinEffect) => {return (b.counts["mskimpact"].somaticVariantsCount + b.counts["mskimpact"].unknownVariantsCount) - (a.counts["mskimpact"].somaticVariantsCount + a.counts["mskimpact"].unknownVariantsCount)};
