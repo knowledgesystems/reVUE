@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { RevisedProteinEffect, VUE } from '../model/VUE';
 import { DataStore } from '../store/DataStore';
-import { cbioportalLink, getLinksFromVue, revisedProteinEffectSortingFn, getContextReferences } from '../utils/VUEUtils';
+import { cbioportalLink, revisedProteinEffectSortingFn, getContextReferences } from '../utils/VUEUtils';
 import { Container, OverlayTrigger, Table, Tooltip } from 'react-bootstrap';
 import './Variants.css';
 import gnLogo from '../images/gn-logo.png';

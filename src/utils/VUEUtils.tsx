@@ -65,10 +65,6 @@ export const getLinks = (references: Reference[]) => {
     return links;
 }
 
-export const getLinksFromVue = (vue: VUE) => {
-    return getLinks(getReferencesText(vue));
-}
-
 export const getContextReferences = (vue: VUE, referenceOnly?: boolean) => {
     let context = vue.context || "";
     let referencesWithoutLinkTextList = [];
