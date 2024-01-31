@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { RevisedProteinEffect, VUE } from '../model/VUE';
 import { DataStore } from '../store/DataStore';
-import { cbioportalLink, getLinks } from '../utils/VUEUtils';
+import { cbioportalLink, getLinksFromVue, revisedProteinEffectSortingFn, getContextReferences } from '../utils/VUEUtils';
 import { Container, OverlayTrigger, Table, Tooltip } from 'react-bootstrap';
 import './Variants.css';
 import gnLogo from '../images/gn-logo.png';
@@ -47,7 +47,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
     if (variantData && variantData.revisedProteinEffects.length > 0) {
         const displayData = 
             variantData.revisedProteinEffects
-            .sort((a, b) => (b.counts["mskimpact"].germlineVariantsCount + b.counts["mskimpact"].somaticVariantsCount + b.counts["mskimpact"].unknownVariantsCount) - (a.counts["mskimpact"].germlineVariantsCount + a.counts["mskimpact"].somaticVariantsCount + a.counts["mskimpact"].unknownVariantsCount))
+            .sort(revisedProteinEffectSortingFn)
             .map((i) => {
                 updateCount(i);
                 return (
@@ -58,13 +58,8 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                         <td>{i.vepPredictedVariantClassification}</td>
                         <td>{i.revisedProteinEffect}</td>
                         <td>{i.revisedVariantClassification}</td>
-                        <td>{i.mutationOrigin}</td>
-                        <td>{`${i.counts["mskimpact"]?.germlineVariantsCount}${` / `}${i.counts["mskimpact"]?.somaticVariantsCount}${` / `}${i.counts["mskimpact"]?.unknownVariantsCount}`}</td>
-                        <td>{`${i.counts["tcga"]?.germlineVariantsCount}${` / `}${i.counts["tcga"].somaticVariantsCount}${` / `}${i.counts["tcga"].unknownVariantsCount}`}</td>
-                        <td>{i.pubmedId === 0 ? <>{i.referenceText}</> : <a href={`https://pubmed.ncbi.nlm.nih.gov/${i.pubmedId}/`} rel="noreferrer" target="_blank">
-                            {i.referenceText}
-                            </a>}
-                        </td>
+                        <td>{i.counts["mskimpact"].somaticVariantsCount + i.counts["mskimpact"].unknownVariantsCount}</td>
+                        <td>{i.counts["tcga"].somaticVariantsCount + i.counts["tcga"].unknownVariantsCount}</td>
                         <td>
                             <a href={`https://www.genomenexus.org/variant/${i.variant}`} rel="noreferrer" target="_blank">
                                 <img src={gnLogo} alt="gn-logo" style={{height: 20, marginRight: 10}} />
@@ -73,6 +68,9 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                                 <img src={oncokbLogo} alt="oncokb-logo" style={{height: 16, marginRight: 10}} />
                             </a>
                             {cbioportalLink(i.revisedProteinEffect.substring(2), gene)}
+                        </td>
+                        <td>
+                            {getContextReferences(variantData, true)}
                         </td>
                     </tr>
                 );
@@ -83,7 +81,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                 <div className="title-container">
                 <h1 className="title">{variantData.hugoGeneSymbol}</h1>
                 <h2 className="subtitle" style={{fontWeight: "bold"}}>Actual Effect: <span style={{fontWeight: "normal"}}>{variantData.comment}</span></h2>
-                <h3 className="subtitle" style={{fontWeight: "bold"}}>Context & References: <span style={{fontWeight: "normal"}}>{variantData.context}{' '}{getLinks(variantData)}</span></h3>
+                <h3 className="subtitle" style={{fontWeight: "bold"}}>Context: <span style={{fontWeight: "normal"}}>{variantData.context}</span></h3>
                 </div>
                 <Table striped bordered hover responsive>
                     <thead>
@@ -94,8 +92,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                             <th>Predicted Variant Classification by VEP</th>
                             <th>Revised Protein Effect</th>
                             <th>Revised Variant Classification</th>
-                            <th>Mutation Status</th>
-                            <th>MSK-IMPACT Variants Count (Germline/Somatic/Unknown)
+                            <th>MSK-IMPACT Variants Count
                                 <OverlayTrigger
                                     placement="right"
                                     delay={{ show: 250, hide: 400 }}
@@ -106,10 +103,10 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                                             {variantData.hugoGeneSymbol} sample count: {mskGeneSampleCount}
                                         </Tooltip>}
                                     >
-                                    <i className={'fa fa-info-circle'} />
+                                    <i className={'fa fa-info-circle'} style={{marginLeft: 5}} />
                                 </OverlayTrigger>
                             </th>
-                            <th>TCGA Pan-Cancer Atlas Variants Count (Germline/Somatic/Unknown)
+                            <th>TCGA Pan-Cancer Atlas Variants Count
                                 <OverlayTrigger
                                     placement="right"
                                     delay={{ show: 250, hide: 400 }}
@@ -120,15 +117,16 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                                             {variantData.hugoGeneSymbol} sample count: {tcgaGeneSampleCount}
                                         </Tooltip>}
                                     >
-                                    <i className={'fa fa-info-circle'} />
+                                    <i className={'fa fa-info-circle'} style={{marginLeft: 5}} />
                                 </OverlayTrigger>
                             </th>
-                            <th>Context & References</th>
                             <th>Linkouts</th>
+                            <th>References</th>
                         </tr>
                     </thead>
                     <tbody>{displayData}</tbody>
                 </Table>
+                <div className="footer">All positions are in hg19</div>
             </Container>
         );
     }

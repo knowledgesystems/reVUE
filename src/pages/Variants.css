@@ -32,3 +32,8 @@ table td, table th {
   border-color: black;
   border: 1px solid black;
 }
+
+.footer {
+  margin-top: 20px;
+  text-align: left;
+}
