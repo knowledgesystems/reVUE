@@ -33,8 +33,9 @@ const Home: React.FC<IHomeProps> = ( props ) => {
                     <p className="lead">A Repository for Variants with Unexpected Effects (VUE) in Cancer</p> 
                     <span>A curated database of known protein effects for those variants that aren't as easily predicted by conventional annotation tools.</span>
                     <hr className="my-4" />
-                    <div>Total genes:{` `}{totalGenes}</div>
-                    <div>Curated VUEs:{` `}{curatedVUEs}</div>
+                    <span>Total genes:{` `}{totalGenes}</span>
+                    <span style={{marginLeft: 50}}>Curated VUEs:{` `}{curatedVUEs}</span>
+                    <span style={{marginLeft: 50}}>VUEs with therapeutic implications: 1</span>
                 </div>
                 <p className='text-left'>
                     <VUETable store={props.store}/>
