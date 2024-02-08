@@ -27,7 +27,7 @@ export type RevisedProteinEffect = {
         germlineVariantsCount: number;
         somaticVariantsCount: number;
         unknownVariantsCount: number;
-        totalSampleCount: number;
-        geneSampleCount: number;
+        totalPatientCount: number;
+        genePatientCount: number;
     }}
 }

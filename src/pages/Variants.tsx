@@ -17,10 +17,8 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
 
     const gene = useParams().gene;
     let countInitialized = false;
-    let mskTotalSampleCount = 0;
-    let mskGeneSampleCount = 0;
-    let tcgaTotalSampleCount = 0;
-    let tcgaGeneSampleCount = 0;
+    let genieTotalPatientCount = 0;
+    let genieGenePatientCount = 0;
 
     useEffect(() => {
         const setData = async () => {
@@ -36,10 +34,8 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
 
     function updateCount(revisedProteinEffect: RevisedProteinEffect) {
         if (!countInitialized) {
-            mskTotalSampleCount = revisedProteinEffect.counts["mskimpact"].totalSampleCount;
-            mskGeneSampleCount = revisedProteinEffect.counts["mskimpact"].geneSampleCount;
-            tcgaTotalSampleCount = revisedProteinEffect.counts["tcga"].totalSampleCount;
-            tcgaGeneSampleCount = revisedProteinEffect.counts["tcga"].geneSampleCount;
+            genieTotalPatientCount = revisedProteinEffect.counts["genie"].totalPatientCount;
+            genieGenePatientCount = revisedProteinEffect.counts["genie"].genePatientCount;
             countInitialized = true;
         }
     }
@@ -58,8 +54,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                         <td>{i.vepPredictedVariantClassification}</td>
                         <td>{i.revisedProteinEffect}</td>
                         <td>{i.revisedVariantClassification}</td>
-                        <td>{i.counts["mskimpact"].somaticVariantsCount + i.counts["mskimpact"].unknownVariantsCount}</td>
-                        <td>{i.counts["tcga"].somaticVariantsCount + i.counts["tcga"].unknownVariantsCount}</td>
+                        <td>{i.counts["genie"].somaticVariantsCount + i.counts["genie"].unknownVariantsCount}</td>
                         <td>
                             <a href={`https://www.genomenexus.org/variant/${i.variant}`} rel="noreferrer" target="_blank">
                                 <img src={gnLogo} alt="gn-logo" style={{height: 20, marginRight: 10}} />
@@ -93,29 +88,15 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                             <th>Predicted Variant Classification by VEP</th>
                             <th>Revised Protein Effect</th>
                             <th>Revised Variant Classification</th>
-                            <th>MSK-IMPACT Variants Count
+                            <th>GENIE MSK-IMPACT Variants Count
                                 <OverlayTrigger
                                     placement="right"
                                     delay={{ show: 250, hide: 400 }}
                                     overlay={
                                         <Tooltip color='light' id="button-tooltip">
-                                            Total sample count: {mskTotalSampleCount}
+                                            Total patient count: {genieTotalPatientCount}
                                             <br/>
-                                            {variantData.hugoGeneSymbol} sample count: {mskGeneSampleCount}
-                                        </Tooltip>}
-                                    >
-                                    <i className={'fa fa-info-circle'} style={{marginLeft: 5}} />
-                                </OverlayTrigger>
-                            </th>
-                            <th>TCGA Pan-Cancer Atlas Variants Count
-                                <OverlayTrigger
-                                    placement="right"
-                                    delay={{ show: 250, hide: 400 }}
-                                    overlay={
-                                        <Tooltip color='light' id="button-tooltip">
-                                            Total sample count: {tcgaTotalSampleCount}
-                                            <br/>
-                                            {variantData.hugoGeneSymbol} sample count: {tcgaGeneSampleCount}
+                                            {variantData.hugoGeneSymbol} patient count: {genieGenePatientCount}
                                         </Tooltip>}
                                     >
                                     <i className={'fa fa-info-circle'} style={{marginLeft: 5}} />

@@ -105,4 +105,4 @@ export const getContextReferences = (vue: VUE, referenceOnly?: boolean) => {
     }
 }
 
-export const revisedProteinEffectSortingFn = (a: RevisedProteinEffect, b: RevisedProteinEffect) => {return (b.counts["mskimpact"].somaticVariantsCount + b.counts["mskimpact"].unknownVariantsCount) - (a.counts["mskimpact"].somaticVariantsCount + a.counts["mskimpact"].unknownVariantsCount)};
+export const revisedProteinEffectSortingFn = (a: RevisedProteinEffect, b: RevisedProteinEffect) => {return (b.counts["genie"].somaticVariantsCount + b.counts["genie"].unknownVariantsCount) - (a.counts["genie"].somaticVariantsCount + a.counts["genie"].unknownVariantsCount)};
