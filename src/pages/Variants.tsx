@@ -17,8 +17,8 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
 
     const gene = useParams().gene;
     let countInitialized = false;
-    let genieTotalPatientCount = 0;
-    let genieGenePatientCount = 0;
+    let mskTotalPatientCount = 0;
+    let mskGenePatientCount = 0;
 
     useEffect(() => {
         const setData = async () => {
@@ -34,8 +34,8 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
 
     function updateCount(revisedProteinEffect: RevisedProteinEffect) {
         if (!countInitialized) {
-            genieTotalPatientCount = revisedProteinEffect.counts["genie"].totalPatientCount;
-            genieGenePatientCount = revisedProteinEffect.counts["genie"].genePatientCount;
+            mskTotalPatientCount = revisedProteinEffect.counts["mskimpact"].totalPatientCount;
+            mskGenePatientCount = revisedProteinEffect.counts["mskimpact"].genePatientCount;
             countInitialized = true;
         }
     }
@@ -54,7 +54,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                         <td>{i.vepPredictedVariantClassification}</td>
                         <td>{i.revisedProteinEffect}</td>
                         <td>{i.revisedVariantClassification}</td>
-                        <td>{i.counts["genie"].somaticVariantsCount + i.counts["genie"].unknownVariantsCount}</td>
+                        <td>{i.counts["mskimpact"].somaticVariantsCount + i.counts["mskimpact"].unknownVariantsCount}</td>
                         <td>
                             <a href={`https://www.genomenexus.org/variant/${i.variant}`} rel="noreferrer" target="_blank">
                                 <img src={gnLogo} alt="gn-logo" style={{height: 20, marginRight: 10}} />
@@ -88,15 +88,15 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                             <th>Predicted Variant Classification by VEP</th>
                             <th>Revised Protein Effect</th>
                             <th>Revised Variant Classification</th>
-                            <th>GENIE MSK-IMPACT Variants Count
+                            <th>MSK-IMPACT Variants Count
                                 <OverlayTrigger
                                     placement="right"
                                     delay={{ show: 250, hide: 400 }}
                                     overlay={
                                         <Tooltip color='light' id="button-tooltip">
-                                            Total patient count: {genieTotalPatientCount}
+                                            Total patient count: {mskTotalPatientCount}
                                             <br/>
-                                            {variantData.hugoGeneSymbol} patient count: {genieGenePatientCount}
+                                            {variantData.hugoGeneSymbol} patient count: {mskGenePatientCount}
                                         </Tooltip>}
                                     >
                                     <i className={'fa fa-info-circle'} style={{marginLeft: 5}} />

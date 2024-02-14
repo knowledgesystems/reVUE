@@ -1,5 +1,7 @@
 import { RevisedProteinEffect, VUE } from "../model/VUE";
 import cbioportalLogo from "../images/cbioportal-logo.png";
+import { useAccordionButton } from 'react-bootstrap/AccordionButton';
+import { FunctionComponent } from "react";
 
 export type Reference = {
     referenceText: string;
@@ -105,4 +107,20 @@ export const getContextReferences = (vue: VUE, referenceOnly?: boolean) => {
     }
 }
 
-export const revisedProteinEffectSortingFn = (a: RevisedProteinEffect, b: RevisedProteinEffect) => {return (b.counts["genie"].somaticVariantsCount + b.counts["genie"].unknownVariantsCount) - (a.counts["genie"].somaticVariantsCount + a.counts["genie"].unknownVariantsCount)};
+export const CustomToggle: FunctionComponent<any> = (props: any) => {
+    const decoratedOnClick = useAccordionButton(props.eventKey, () =>
+      console.log('totally custom!'),
+    );
+  
+    return (
+      <button
+        type="button"
+        style={{ backgroundColor: 'pink' }}
+        onClick={decoratedOnClick}
+      >
+        {props.children}
+      </button>
+    );
+  }
+
+export const revisedProteinEffectSortingFn = (a: RevisedProteinEffect, b: RevisedProteinEffect) => {return (b.counts["mskimpact"].somaticVariantsCount + b.counts["mskimpact"].unknownVariantsCount) - (a.counts["mskimpact"].somaticVariantsCount + a.counts["mskimpact"].unknownVariantsCount)};
