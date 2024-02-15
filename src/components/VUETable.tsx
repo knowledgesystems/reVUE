@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { VUE } from '../model/VUE';
 import { cbioportalLink, getContextReferences } from '../utils/VUEUtils';
-import "./VUETable.css";
 import vueLogo from "./../images/vue_logo.png";
 import gnLogo from '../images/gn-logo.png';
 import oncokbLogo from '../images/oncokb-logo.png';
 import { DataStore } from '../store/DataStore';
-import { Table } from 'react-bootstrap';
+import { Table, Accordion } from 'react-bootstrap';
+import "./VUETable.css";
 
 interface IVUETableProps {
     store: DataStore;
@@ -24,14 +24,30 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
         setData();
     });
 
-    const displayData = vueData.map((info) => {
+    const displayData = vueData.map((info, index) => {
+        const revisedProteinEffectList = info.revisedProteinEffects?.map(e => e.revisedProteinEffect) || [];
+        const uniqueRevisedProteinEffectList = revisedProteinEffectList.filter((value, index, array) => array.indexOf(value) === index);
         return (
             <tr >
                 <td><Link to={`/vue/${info.hugoGeneSymbol}`}>{info.hugoGeneSymbol}</Link></td>
                 <td>{info.genomicLocationDescription}</td>
                 <td>{info.defaultEffect}</td>
                 <td>{info.comment}</td>
-                <td>{info.revisedProteinEffects.length > 0 ? info.revisedProteinEffects[0].revisedProteinEffect : ""}</td>
+                <td>
+                    <div style={{width: 150}}>
+                        {uniqueRevisedProteinEffectList.length === 1 ? uniqueRevisedProteinEffectList[0] : ""}
+                        {uniqueRevisedProteinEffectList.length > 1 && (
+                            <Accordion as={"p"} flush>
+                                <Accordion.Item eventKey="0">
+                                    <Accordion.Header className='CollapseHeader'>{uniqueRevisedProteinEffectList[0]} <i className="fa fa-chevron-circle-down"/></Accordion.Header>
+                                    <Accordion.Body>
+                                        {uniqueRevisedProteinEffectList.slice(1).join(", ")}
+                                    </Accordion.Body>
+                                </Accordion.Item>
+                            </Accordion>
+                        )}
+                    </div>
+                </td>
                 <td>{getContextReferences(info)}</td>
                 <td>{info.revisedProteinEffects && (
                     <>

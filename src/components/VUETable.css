@@ -1,3 +1,12 @@
 .vue-table > tbody > tr > td {
     vertical-align: middle;
 }
+
+.CollapseHeader > button {
+    border: none;
+    font-size: 1rem;
+    background-color: transparent;
+    padding: unset;
+    font-family: unset;
+    color: unset;
+}
