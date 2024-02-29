@@ -39,9 +39,9 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
                         {uniqueRevisedProteinEffectList.length > 1 && (
                             <Accordion as={"p"} flush>
                                 <Accordion.Item eventKey="0">
-                                    <Accordion.Header className='CollapseHeader'>{uniqueRevisedProteinEffectList[0]} <i className="fa fa-chevron-circle-down"/></Accordion.Header>
+                                    <Accordion.Header className='CollapseHeader'>{"Multiple"} <i className="fa fa-chevron-circle-down"/></Accordion.Header>
                                     <Accordion.Body>
-                                        {uniqueRevisedProteinEffectList.slice(1).join(", ")}
+                                        {uniqueRevisedProteinEffectList.join(", ")}
                                     </Accordion.Body>
                                 </Accordion.Item>
                             </Accordion>
@@ -77,7 +77,7 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
                             <img alt='reVUE logo' src={vueLogo} width={20} style={{marginBottom:2}} />{' '}
                             Actual Effect
                         </th>
-                        <th>Example Revised Protein Change</th>
+                        <th>Revised Protein Change</th>
                         <th>Context & References</th>
                         <th>Usage Example</th>
                     </tr>
