@@ -87,7 +87,35 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                             <th>Predicted Protein Effect by VEP</th>
                             <th>Predicted Variant Classification by VEP</th>
                             <th>Revised Protein Effect</th>
-                            <th>Revised Variant Classification</th>
+                            <th>Revised Variant Classification
+                                <OverlayTrigger
+                                    placement="right"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={
+                                        <Tooltip color='light' id="button-tooltip">
+                                            <div style={{textAlign:"left"}}>
+                                                Splice
+                                                <div style={{marginLeft:20}}>_Exon_Skip<span style={{color:"#666463"}}>{` (skip one or multiple whole exon)`}</span></div>
+                                                <div style={{marginLeft:60}}>_In_Frame</div>
+                                                <div style={{marginLeft:60}}>_Out_Of_Frame</div>
+                                                <div style={{marginLeft:60, width:"max-content"}}>_Non_Start<span style={{color:"#666463"}}>{` (first coding exon skipped)`}</span></div>
+                                                <div style={{marginLeft:20}}>_Exon_Extension<span style={{color:"#666463"}}>{` (extend exon)`}</span></div>
+                                                <div style={{marginLeft:60}}>_In_Frame</div>
+                                                <div style={{marginLeft:60}}>_Out_Of_Frame</div>
+                                                <div style={{marginLeft:60, width:"max-content"}}>_Nonsense<span style={{color:"#666463"}}>{` (introduce stop codon)`}</span></div>
+                                                <div style={{marginLeft:20}}>_Exon_Shortening<span style={{color:"#666463"}}>{` (truncate a portion of exon)`}</span></div>
+                                                <div style={{marginLeft:60}}>_In_Frame</div>
+                                                <div style={{marginLeft:60}}>_Out_Of_Frame</div>
+                                                <div style={{marginLeft:20}}>_Intron_Retention<span style={{color:"#666463"}}>{` (introduce the whole intron)`}</span></div>
+                                                <div style={{marginLeft:60}}>_In_Frame</div>
+                                                <div style={{marginLeft:60}}>_Out_Of_Frame</div>
+                                            </div>
+                                            
+                                        </Tooltip>}
+                                    >
+                                    <i className={'fa fa-info-circle'} style={{marginLeft: 5}} />
+                                </OverlayTrigger>
+                            </th>
                             <th>MSK-IMPACT Variants Count
                                 <OverlayTrigger
                                     placement="right"

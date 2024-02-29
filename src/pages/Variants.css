@@ -31,6 +31,7 @@ table td, table th {
   color: black; 
   border-color: black;
   border: 1px solid black;
+  min-width: max-content;
 }
 
 .footer {
