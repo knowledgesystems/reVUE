@@ -64,14 +64,23 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                             </a>
                             {cbioportalLink(i.revisedProteinEffect.substring(2), gene)}
                         </td>
-                        <td>{i.pubmedId === 0 ? <>{i.referenceText}</> : <a href={`https://pubmed.ncbi.nlm.nih.gov/${i.pubmedId}/`} rel="noreferrer" target="_blank">
-                            {i.referenceText}
-                            </a>}
+                        <td>
+                            {i.references.map((ref, index) => (
+                                <div key={index}>
+                                    {index > 0 && "; "}
+                                    {ref.pubmedId === 0 ? (
+                                        <>{ref.referenceText}</>
+                                    ) : (
+                                        <a href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmedId}/`} rel="noreferrer" target="_blank">
+                                            {ref.referenceText}
+                                        </a>
+                                    )}
+                                </div>
+                            ))}
                         </td>
                     </tr>
                 );
-            })
-
+            });
         return (
             <Container className="gene-page">
                 <div className="title-container">
