@@ -1,12 +1,7 @@
-import { RevisedProteinEffect, VUE } from "../model/VUE";
+import { Reference, RevisedProteinEffect, VUE } from "../model/VUE";
 import cbioportalLogo from "../images/cbioportal-logo.png";
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { FunctionComponent } from "react";
-
-export type Reference = {
-    referenceText: string;
-    pubmedId: number;
-};
 
 export const cbioportalLink = (proteinChange: string, gene?: string, ) => {
     // for now only show APC and CTNNB1
@@ -41,13 +36,14 @@ export const fetchVueData = async (): Promise<VUE[]> => {
 export const getReferencesText = (vue: VUE) => {
     const uniqueReferences: Reference[] = [];
     vue.revisedProteinEffects.forEach(v => {
-        let i = uniqueReferences.findIndex(ref => (ref.referenceText === v.referenceText && ref.pubmedId === v.pubmedId))
-        if (i === -1) {
-            uniqueReferences.push({
-                referenceText: v.referenceText,
-                pubmedId: v.pubmedId
+        vue.revisedProteinEffects.forEach(v => {
+            v.references.forEach(ref => {
+            let i = uniqueReferences.findIndex(r => r.referenceText === ref.referenceText && r.pubmedId === ref.pubmedId);
+            if (i === -1) {
+                uniqueReferences.push(ref);
+            }
             });
-        }
+        });
     })
     return uniqueReferences;
 }

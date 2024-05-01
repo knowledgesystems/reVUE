@@ -17,12 +17,12 @@ export type RevisedProteinEffect = {
     revisedProteinEffect: string;
     revisedVariantClassification: string;
     mutationOrigin: string,
-    pubmedId: number;
-    referenceText: string;
+    references: Reference[];
     germlineVariantsCount: number;
     somaticVariantsCount: number;
     unknownMutationStatusVariantsCount: number;
     confirmed: boolean;
+    variantNote: string;
     counts: {[cohort: string]: {
         germlineVariantsCount: number;
         somaticVariantsCount: number;
@@ -30,4 +30,9 @@ export type RevisedProteinEffect = {
         totalPatientCount: number;
         genePatientCount: number;
     }}
+}
+
+export type Reference = {
+    referenceText: string;
+    pubmedId: number;
 }
