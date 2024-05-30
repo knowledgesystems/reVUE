@@ -30,7 +30,7 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
         return (
             <tr >
                 <td><Link to={`/vue/${info.hugoGeneSymbol}`}>{info.hugoGeneSymbol}</Link></td>
-                <td>{info.genomicLocationDescription}</td>
+                <td>{info.revisedProteinEffects.length}</td>
                 <td>{info.defaultEffect}</td>
                 <td>{info.comment}</td>
                 <td>
@@ -71,7 +71,7 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
                 <thead>
                     <tr>
                         <th>Gene</th>
-                        <th>Genomic Location</th>
+                        <th>Variants Count</th>
                         <th>Predicted Effect</th>
                         <th>
                             <img alt='reVUE logo' src={vueLogo} width={20} style={{marginBottom:2}} />{' '}
