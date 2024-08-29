@@ -55,7 +55,13 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                         <td>{i.revisedProteinEffect}</td>
                         <td>{i.revisedVariantClassification}</td>
                         <td>{i.therapeuticLevel || "Oncogenic"}</td>
-                        <td>{i.counts["mskimpact"].somaticVariantsCount + i.counts["mskimpact"].unknownVariantsCount}</td>
+                        <td>{i.counts["mskimpact"].somaticVariantsCount + 
+                             i.counts["mskimpact"].unknownVariantsCount + 
+                             i.counts["mskimpact"].germlineVariantsCount +
+                             i.counts["mskimpact_nonsignedout"].somaticVariantsCount +
+                             i.counts["mskimpact_nonsignedout"].unknownVariantsCount +
+                             i.counts["mskimpact_nonsignedout"].germlineVariantsCount
+                            }</td>
                         <td>
                             <a href={`https://www.genomenexus.org/variant/${i.variant}`} rel="noreferrer" target="_blank">
                                 <img src={gnLogo} alt="gn-logo" style={{height: 20, marginRight: 10}} />

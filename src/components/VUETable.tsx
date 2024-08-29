@@ -34,6 +34,7 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
                 highestLevel = parseInt(e.therapeuticLevel.split('_')[1]);
                 highestTherapeuticLevel = e.therapeuticLevel;
             }
+            return null;
         });
         return (
             <tr >
