@@ -54,6 +54,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                         <td>{i.vepPredictedVariantClassification}</td>
                         <td>{i.revisedProteinEffect}</td>
                         <td>{i.revisedVariantClassification}</td>
+                        <td>{i.therapeuticLevel || "Oncogenic"}</td>
                         <td>{i.counts["mskimpact"].somaticVariantsCount + i.counts["mskimpact"].unknownVariantsCount}</td>
                         <td>
                             <a href={`https://www.genomenexus.org/variant/${i.variant}`} rel="noreferrer" target="_blank">
@@ -125,6 +126,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                                     <i className={'fa fa-info-circle'} style={{marginLeft: 5}} />
                                 </OverlayTrigger>
                             </th>
+                            <th>Therapeutic Level</th>
                             <th>MSK-IMPACT Variants Count
                                 <OverlayTrigger
                                     placement="right"
