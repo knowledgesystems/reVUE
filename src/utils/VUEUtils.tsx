@@ -19,7 +19,7 @@ export const cbioportalLink = (proteinChange: string, gene?: string, ) => {
 export const fetchVueData = async (): Promise<VUE[]> => {
     try {
         const response = await fetch(
-            'https://raw.githubusercontent.com/knowledgesystems/reVUE-data/f921929f4a8672f697f007efaa7e516e80fcf954/VUEs.json'
+            'https://raw.githubusercontent.com/knowledgesystems/reVUE-data/ceff44a4dc314fe2a65b90e99aaa8e4e93e50b19/VUEs.json'
         );
         const vues: VUE[] = await response.json();
         // Sort revisedProteinEffects by counts
