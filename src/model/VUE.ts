@@ -29,7 +29,11 @@ export type RevisedProteinEffect = {
         unknownVariantsCount: number;
         totalPatientCount: number;
         genePatientCount: number;
-    }}
+        germlineVariantsCountByCancerType: {};
+        somaticVariantsCountByCancerType: {};
+        unknownVariantsCountByCancerType: {};
+    }};
+    therapeuticLevel: string;
 }
 
 export type Reference = {

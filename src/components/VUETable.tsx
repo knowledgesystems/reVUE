@@ -27,10 +27,20 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
     const displayData = vueData.map((info, index) => {
         const revisedProteinEffectList = info.revisedProteinEffects?.map(e => e.revisedProteinEffect) || [];
         const uniqueRevisedProteinEffectList = revisedProteinEffectList.filter((value, index, array) => array.indexOf(value) === index);
+        let highestTherapeuticLevel = "Oncogenic";
+        info.revisedProteinEffects?.map(e => {
+            let highestLevel = Infinity;
+            if (e.therapeuticLevel && parseInt(e.therapeuticLevel.split('_')[1]) < highestLevel) {
+                highestLevel = parseInt(e.therapeuticLevel.split('_')[1]);
+                highestTherapeuticLevel = e.therapeuticLevel;
+            }
+            return null;
+        });
         return (
             <tr >
                 <td><Link to={`/vue/${info.hugoGeneSymbol}`}>{info.hugoGeneSymbol}</Link></td>
-                <td>{info.revisedProteinEffects.length}</td>
+                <td style={{textAlign:"right"}}>{info.revisedProteinEffects.length}</td>
+                <td>{highestTherapeuticLevel}</td>
                 <td>{info.defaultEffect}</td>
                 <td>{info.comment}</td>
                 <td>
@@ -45,8 +55,7 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
                                     </Accordion.Body>
                                 </Accordion.Item>
                             </Accordion>
-                        )}
-                    </div>
+                    )}</div>
                 </td>
                 <td>{getContextReferences(info)}</td>
                 <td>{info.revisedProteinEffects && (
@@ -58,9 +67,10 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
                             <img src={oncokbLogo} alt="oncokb-logo" style={{height: 16, marginRight: 10}} />
                         </a>
                         {cbioportalLink(info.revisedProteinEffects[0].revisedProteinEffect.substring(2), info.hugoGeneSymbol)}
-                    </>)}
+                    </>
+                )}
                 </td>
-            </tr>
+                </tr>
         );
     });
 
@@ -71,7 +81,8 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
                 <thead>
                     <tr>
                         <th>Gene</th>
-                        <th>Variants Count</th>
+                        <th>VUE Count</th>
+                        <th>Therapeutic Level</th>
                         <th>Predicted Effect</th>
                         <th>
                             <img alt='reVUE logo' src={vueLogo} width={20} style={{marginBottom:2}} />{' '}
