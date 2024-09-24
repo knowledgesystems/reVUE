@@ -81,7 +81,7 @@ export const VUETable: React.FC<IVUETableProps> = (props) => {
                 <thead>
                     <tr>
                         <th>Gene</th>
-                        <th>Variants Count</th>
+                        <th>VUE Count</th>
                         <th>Therapeutic Level</th>
                         <th>Predicted Effect</th>
                         <th>
