@@ -21,7 +21,9 @@ export const fetchVueData = async (): Promise<VUE[]> => {
         const response = await fetch(
             'https://raw.githubusercontent.com/knowledgesystems/reVUE-data/b49aac76e5e27d94dc059b67f22556c2792d31ad/VUEs.json'
         );
-        const vues: VUE[] = await response.json();
+        let vues: VUE[] = await response.json();
+        // Sort VUEs by genes in alphabetical order
+        vues = vues.sort((a, b) => a.hugoGeneSymbol.localeCompare(b.hugoGeneSymbol));
         // Sort revisedProteinEffects by counts
         for (const vue of vues) {
             vue.revisedProteinEffects = vue.revisedProteinEffects.sort(revisedProteinEffectSortingFn);
