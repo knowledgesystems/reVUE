@@ -119,6 +119,17 @@ export const CustomToggle: FunctionComponent<any> = (props: any) => {
         {props.children}
       </button>
     );
-  }
+}
 
+export const getHighestTherapeuticLevel = (vue: VUE) => {
+    let highestTherapeuticLevel = "Oncogenic";
+    let highestLevel = Infinity;
+    vue.revisedProteinEffects?.forEach(e => {
+        if (e.therapeuticLevel && parseInt(e.therapeuticLevel.split('_')[1]) < highestLevel) {
+            highestLevel = parseInt(e.therapeuticLevel.split('_')[1]);
+            highestTherapeuticLevel = e.therapeuticLevel;
+        }
+    });
+    return highestTherapeuticLevel;
+}
 export const revisedProteinEffectSortingFn = (a: RevisedProteinEffect, b: RevisedProteinEffect) => {return (b.counts["mskimpact"].somaticVariantsCount + b.counts["mskimpact"].unknownVariantsCount) - (a.counts["mskimpact"].somaticVariantsCount + a.counts["mskimpact"].unknownVariantsCount)};

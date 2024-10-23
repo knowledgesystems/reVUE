@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { VUE } from '../model/VUE';
-import { cbioportalLink, getContextReferences } from '../utils/VUEUtils';
+import { cbioportalLink, getContextReferences, getHighestTherapeuticLevel } from '../utils/VUEUtils';
 import vueLogo from "./../images/vue_logo.png";
 import gnLogo from '../images/gn-logo.png';
 import oncokbLogo from '../images/oncokb-logo.png';
@@ -26,15 +26,16 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
         setData();
     }, [props.store.data]);
 
-    // Filtered data based on search input
-    // No filtering if searchInput is empty
+    // Filter data based on search input
     const filteredData = useMemo(() => {
         if (!searchInput) {
             return vueData;
-          }  
-        return vueData.filter(item =>
-            item.hugoGeneSymbol.toLowerCase().includes(searchInput.toLowerCase())
-        );
+        }  
+        return vueData.filter(item => {
+            return Object.values(item).some(value => {
+                return String(value).toLowerCase().includes(searchInput.toLowerCase());
+            });
+        });
     }, [vueData, searchInput]);
 
     const columns: Column<VUE>[] = useMemo(() => [
@@ -52,17 +53,7 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
         },
         {
             Header: 'Therapeutic Level',
-            accessor: (row: VUE) => {
-                let highestTherapeuticLevel = "Oncogenic";
-                let highestLevel = Infinity;
-                row.revisedProteinEffects?.forEach(e => {
-                    if (e.therapeuticLevel && parseInt(e.therapeuticLevel.split('_')[1]) < highestLevel) {
-                        highestLevel = parseInt(e.therapeuticLevel.split('_')[1]);
-                        highestTherapeuticLevel = e.therapeuticLevel;
-                    }
-                });
-                return highestTherapeuticLevel;
-            },
+            accessor: (row: VUE) => getHighestTherapeuticLevel(row),
             width: "10%"
         },
         {
@@ -128,7 +119,7 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
         headerGroups,
         rows,
         prepareRow
-    } = useTable({ columns, data: filteredData }, useSortBy);  // Apply filtered data
+    } = useTable({ columns, data: filteredData }, useSortBy);
 
     return (
         <div>
@@ -136,7 +127,7 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
             <div>
                 <input
                     type="text"
-                    placeholder="Search by Gene..."
+                    placeholder="Search by Gene or Context..."
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
                     style={{ padding: '5px', width: '23%', borderRadius: '5px', border: '1px solid #ccc' }}
