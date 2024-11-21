@@ -46,18 +46,6 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
         setData();
     }, [props.store.data]);
 
-    // Filter data based on search input
-    // const filteredData = useMemo(() => {
-    //     if (!searchInput) {
-    //         return vueData;
-    //     }  
-    //     return vueData.filter(item => {
-    //         return Object.values(item).some(value => {
-    //             return String(value).toLowerCase().includes(searchInput.toLowerCase());
-    //         });
-    //     });
-    // }, [vueData, searchInput]);
-
     const columns: Column<VUE>[] = useMemo(() => [
         {
             Header: 'Gene',
