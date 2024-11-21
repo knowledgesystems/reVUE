@@ -6,14 +6,34 @@ import vueLogo from "./../images/vue_logo.png";
 import gnLogo from '../images/gn-logo.png';
 import oncokbLogo from '../images/oncokb-logo.png';
 import { DataStore } from '../store/DataStore';
-import { Accordion } from 'react-bootstrap';
-import { useTable, useSortBy, Column } from 'react-table';
+import { Accordion, Table } from 'react-bootstrap';
+import { useTable, useSortBy, Column, Row } from 'react-table';
 
 import "./VUETable.css";
 
 interface IVUETableProps {
     store: DataStore;
 }
+
+const therapeuticLevelSort = (rowA: Row<VUE>, rowB: Row<VUE>, columnId: string) => {
+    const valueA = rowA.values[columnId];
+    const valueB = rowB.values[columnId];
+
+    const therapeuticLevelOrder = ['LEVEL_1', 'LEVEL_2', 'LEVEL_3', 'LEVEL_4', 'Oncogenic'];
+
+    const indexA = therapeuticLevelOrder.indexOf(valueA);
+    const indexB = therapeuticLevelOrder.indexOf(valueB);
+
+    if (indexA === -1 && indexB === -1) {
+        return 0;
+    } else if (indexA === -1) {
+        return 1;
+    } else if (indexB === -1) {
+        return -1;
+    } else {
+        return indexB - indexA;
+    }
+};
 
 const VUETable: React.FC<IVUETableProps> = (props) => {
     const [vueData, setVueData] = useState<VUE[]>([]);
@@ -27,16 +47,16 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
     }, [props.store.data]);
 
     // Filter data based on search input
-    const filteredData = useMemo(() => {
-        if (!searchInput) {
-            return vueData;
-        }  
-        return vueData.filter(item => {
-            return Object.values(item).some(value => {
-                return String(value).toLowerCase().includes(searchInput.toLowerCase());
-            });
-        });
-    }, [vueData, searchInput]);
+    // const filteredData = useMemo(() => {
+    //     if (!searchInput) {
+    //         return vueData;
+    //     }  
+    //     return vueData.filter(item => {
+    //         return Object.values(item).some(value => {
+    //             return String(value).toLowerCase().includes(searchInput.toLowerCase());
+    //         });
+    //     });
+    // }, [vueData, searchInput]);
 
     const columns: Column<VUE>[] = useMemo(() => [
         {
@@ -54,6 +74,7 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
         {
             Header: 'Therapeutic Level',
             accessor: (row: VUE) => getHighestTherapeuticLevel(row),
+            sortType: therapeuticLevelSort,
             width: "10%"
         },
         {
@@ -88,6 +109,7 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
         },
         {
             Header: 'Context & References',
+            id: 'context',
             accessor: (row: VUE) => getContextReferences(row),
             width: "43%",
             disableSortBy: true
@@ -119,22 +141,22 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
         headerGroups,
         rows,
         prepareRow
-    } = useTable({ columns, data: filteredData }, useSortBy);
+    } = useTable({ columns, data: vueData }, useSortBy);
 
     return (
         <div>
             {/* Search box */}
-            <div>
+            <div className="table-search-box">
                 <input
                     type="text"
-                    placeholder="Search by Gene or Context..."
+                    placeholder="Search by Gene / Therapeutic Level / Effects / Context ..."
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
-                    style={{ padding: '5px', width: '23%', borderRadius: '5px', border: '1px solid #ccc' }}
+                    style={{ padding: '5px', width: '85%', borderRadius: '5px', border: '1px solid #ccc', textAlign: 'center'}}
                 />
             </div>
 
-            <table {...getTableProps()} className="vue-table table table-bordered table-hover">
+            <Table {...getTableProps()} className="vue-table table-bordered table-hover">
                 <thead>
                     {headerGroups.map(headerGroup => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
@@ -146,17 +168,33 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
                                     width: column.width
                                 }}
                                 >
-                                    {column.render('Header')}
-                                    <span>
-                                        {column.isSorted ? (column.isSortedDesc ? <i className="fa fa-chevron-down" style={{marginLeft: 5}} /> : <i className="fa fa-chevron-up" style={{marginLeft: 5}} />) : <></>}
-                                    </span>
+                                    <div style={{ cursor: 'pointer' }}>
+                                        {column.render('Header')}
+                                        <span>
+                                            {column.isSorted ? (column.isSortedDesc ? <i className="fa fa-chevron-down" style={{marginLeft: 5}} /> : <i className="fa fa-chevron-up" style={{marginLeft: 5}} />) : <></>}
+                                        </span>
+                                    </div>
                                 </th>
                             ))}
                         </tr>
                     ))}
                 </thead>
                 <tbody {...getTableBodyProps()}>
-                    {rows.map(row => {
+                    {rows.filter(row => {
+                        return row.cells.some(cell => {
+                            // search in comment column
+                            if (cell.column?.id === 'comment') {
+                                const revisedProteinEffectList = row.original.revisedProteinEffects?.map((e: { revisedProteinEffect: string }) => e.revisedProteinEffect) || [];
+                                const uniqueRevisedProteinEffectList = revisedProteinEffectList.filter((value: string, index: number, array: string[]) => array.indexOf(value) === index);
+                                return uniqueRevisedProteinEffectList.join(", ").toLowerCase().includes(searchInput.toLowerCase());
+                            } else if (cell.column?.id === 'context') {
+                                    return row.original.context.toLowerCase().includes(searchInput.toLowerCase());
+                            } else {
+                                // search in other columns
+                                return String(cell.value).toLowerCase().includes(searchInput.toLowerCase());
+                            }
+                        });
+                    }).map(row => {
                         prepareRow(row);
                         return (
                             <tr {...row.getRowProps()}>
@@ -168,7 +206,7 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
                         );
                     })}
                 </tbody>
-            </table>
+            </Table>
         </div>
     );
 };
