@@ -95,8 +95,8 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                 <h2 className="subtitle" style={{fontWeight: "bold"}}>Actual Effect: <span style={{fontWeight: "normal"}}>{variantData.comment}</span></h2>
                 <h3 className="subtitle" style={{fontWeight: "bold"}}>Context: <span style={{fontWeight: "normal"}}>{variantData.context}</span></h3>
                 </div>
-                <Table striped bordered hover responsive>
-                    <thead>
+                <Table bordered hover responsive>
+                    <thead className='header'>
                         <tr>
                         <   th>Variant <i className="fa fa-external-link" /></th>
                             <th>Transcript Id</th>

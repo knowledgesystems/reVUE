@@ -3,6 +3,10 @@
     display: inline-block;
 }
 
+.header {
+  background-color: rgb(241, 241, 241);
+}
+
 .title {
   text-align: left;
   font-size: 2em;
@@ -20,6 +24,7 @@
 table {
   text-align: left;
   margin-top: 20px;
+  border: 1px solid #dee2e6;
 }
 
 table td, table th {
