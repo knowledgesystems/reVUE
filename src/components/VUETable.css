@@ -13,7 +13,7 @@
 }
 
 .table-search-box {
-    width: 30%;
+    width: 20%;
 }
 
 .table-search-box > input {
@@ -21,8 +21,9 @@
     width: 100%;
     border-radius: 5px;
     border: 1px solid #ccc;
-    text-align: center;
+    text-align: left;
     font-size: 0.85rem;
+    margin-left: 10px;
 }
 .vue-table {
     width: 85%;

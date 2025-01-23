@@ -181,7 +181,7 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
                 <span className="table-search-box">
                     <input
                         type="text"
-                        placeholder="Search by Gene / Therapeutic Level / Effects / Context & References ..."
+                        placeholder="Search..."
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
                     />
