@@ -2,6 +2,33 @@
     vertical-align: middle;
 }
 
+.search-summary-number {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.search-summary-text {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.table-search-box {
+    width: 20%;
+}
+
+.table-search-box > input {
+    padding: 5px;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    text-align: left;
+    font-size: 0.85rem;
+}
+.vue-table {
+    width: 85%;
+    margin: 20px auto;
+}
+
 .CollapseHeader > button {
     border: none;
     font-size: 1rem;

@@ -1,7 +1,10 @@
 import { Reference, RevisedProteinEffect, VUE } from "../model/VUE";
 import cbioportalLogo from "../images/cbioportal-logo.png";
-import { useAccordionButton } from 'react-bootstrap/AccordionButton';
-import { FunctionComponent } from "react";
+
+export type ContextAndReferences = {
+    context: string;
+    references: Reference[];
+};
 
 export const cbioportalLink = (proteinChange: string, gene?: string, ) => {
     // for now only show APC and CTNNB1
@@ -50,75 +53,73 @@ export const getReferencesText = (vue: VUE) => {
     return uniqueReferences;
 }
 
-export const getLinks = (references: Reference[]) => {
-    const links = references.map((reference, i) =>{
-        // pubmedId = 0 means this variant is reported by users and does not have any paper as reference
-        return reference.pubmedId === 0 ? <>{reference.referenceText}</> :
+const getLinks = (references: Reference[]) => {
+    return references.map((reference, i) => {
+        const pubmedId = Number(reference.pubmedId);
+        return pubmedId === 0 ? (
+            <>{reference.referenceText}{i !== references.length - 1 && '; '}</>
+        ) : (
             <>
-                <a href={`https://pubmed.ncbi.nlm.nih.gov/${reference.pubmedId}/`} rel="noreferrer" target="_blank">
+                <a href={`https://pubmed.ncbi.nlm.nih.gov/${pubmedId}/`} rel="noreferrer" target="_blank">
                     {reference.referenceText}
                 </a>
-                {(i !== references.length - 1) && '; '}
-            </> 
-    } )
+                {i !== references.length - 1 && '; '}
+            </>
+        );
+    });
+};
 
-    return links;
-}
-
-export const getContextReferences = (vue: VUE, referenceOnly?: boolean) => {
+export const extractContextAndReferences = (vue: VUE): ContextAndReferences => {
     let context = vue.context || "";
-    let referencesWithoutLinkTextList = [];
-    const referencesWithLink = [];
+    const references: Reference[] = [];
     for (const reference of getReferencesText(vue)) {
         if (reference.pubmedId === 0) {
-            referencesWithoutLinkTextList.push(reference.referenceText);
+            references.push({ referenceText: reference.referenceText, pubmedId: 0 });
         } else {
             const splitedReferenceText = reference.referenceText.split(';');
             if (splitedReferenceText.length === 2) {
-                referencesWithoutLinkTextList.push(splitedReferenceText[0]);
-                referencesWithLink.push({
-                    referenceText: splitedReferenceText[1],
-                    pubmedId: reference.pubmedId
-                })
+                // Split into context and pubmedId
+                references.push({ referenceText: splitedReferenceText[1], pubmedId: reference.pubmedId });
             } else {
-                referencesWithLink.push(reference);
+                references.push(reference);
             }
         }
     }
-    const referencesWithoutLinkText = referencesWithoutLinkTextList.length > 0 ? referencesWithoutLinkTextList.join("; ") + "; ": "";
-    if (context) {
-        return (
-            <>
-                {!referenceOnly && `${context} (`}
-                {referencesWithoutLinkText}
-                {getLinks(referencesWithLink)}
-                {!referenceOnly &&`)`}
-            </>
-        );
-    } else {
-        return (
-            <>
-                {referencesWithoutLinkText}
-                {getLinks(referencesWithLink)}
-            </>
-        );
-    }
-}
 
-export const CustomToggle: FunctionComponent<any> = (props: any) => {
-    const decoratedOnClick = useAccordionButton(props.eventKey, () =>
-      console.log('totally custom!'),
-    );
-  
+    return { context, references } as ContextAndReferences;
+};
+
+export const renderContextAndReferences = (contextAndReferences: ContextAndReferences): JSX.Element => {
+    const { context, references } = contextAndReferences;
+
+    // Separate references without links 
+    const referencesWithoutLinkText = references
+        .filter(ref => ref.pubmedId === 0)
+        .map(ref => ref.referenceText)
+        .join("; ");
+
+    // References with links
+    const referencesWithLinks = references.filter(ref => ref.pubmedId !== 0);
     return (
-      <button
-        type="button"
-        style={{ backgroundColor: 'pink' }}
-        onClick={decoratedOnClick}
-      >
-        {props.children}
-      </button>
+        <>
+            {context && `${context} (`}
+            {referencesWithoutLinkText && `${referencesWithoutLinkText}; `}
+            {getLinks(referencesWithLinks)}
+            {context && `)`}
+        </>
     );
-  }
+};
 
+
+export const getHighestTherapeuticLevel = (vue: VUE) => {
+    let highestTherapeuticLevel = "Oncogenic";
+    let highestLevel = Infinity;
+    vue.revisedProteinEffects?.forEach(e => {
+        if (e.therapeuticLevel && parseInt(e.therapeuticLevel.split('_')[1]) < highestLevel) {
+            highestLevel = parseInt(e.therapeuticLevel.split('_')[1]);
+            highestTherapeuticLevel = e.therapeuticLevel;
+        }
+    });
+    return highestTherapeuticLevel;
+}
 export const revisedProteinEffectSortingFn = (a: RevisedProteinEffect, b: RevisedProteinEffect) => {return (b.counts["mskimpact"].somaticVariantsCount + b.counts["mskimpact"].unknownVariantsCount) - (a.counts["mskimpact"].somaticVariantsCount + a.counts["mskimpact"].unknownVariantsCount)};
