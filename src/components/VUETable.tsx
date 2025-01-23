@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { VUE } from '../model/VUE';
-import { cbioportalLink, getContextReferences, getHighestTherapeuticLevel } from '../utils/VUEUtils';
+import { cbioportalLink, extractContextAndReferences, getHighestTherapeuticLevel, renderContextAndReferences } from '../utils/VUEUtils';
 import vueLogo from "./../images/vue_logo.png";
 import gnLogo from '../images/gn-logo.png';
 import oncokbLogo from '../images/oncokb-logo.png';
@@ -45,6 +45,40 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
         };
         setData();
     }, [props.store.data]);
+
+    // filter rows based on search input
+    const filteredRows = useMemo(() => {
+        return vueData.filter(row => {
+            return (
+                row.hugoGeneSymbol.toLowerCase().includes(searchInput.toLowerCase()) ||
+                (getHighestTherapeuticLevel(row)?.toLowerCase() || '').includes(searchInput.toLowerCase()) ||
+                row.defaultEffect.toLowerCase().includes(searchInput.toLowerCase()) ||
+                (row.comment?.toLowerCase() || '').includes(searchInput.toLowerCase()) ||
+                (extractContextAndReferences(row).context || '').includes(searchInput.toLowerCase()) ||
+                extractContextAndReferences(row).references.some(reference => reference.referenceText.toLowerCase().includes(searchInput.toLowerCase()))
+            );
+        });
+    }, [vueData, searchInput]);
+
+    // Calculate summary values
+    const curatedVUEsCount = filteredRows.reduce((total, row) => {
+        return total + row.revisedProteinEffects.length;
+    }, 0);
+    const uniqueGenesCount = filteredRows.length;
+    const uniqueArticlesCount = useMemo(() => {
+        const pubmedIds = new Set<number>();
+
+        filteredRows.forEach(row => {
+            row.revisedProteinEffects.forEach(revisedProteinEffect => {
+                revisedProteinEffect.references.forEach(reference => {
+                    if (reference.pubmedId !== 0) {
+                        pubmedIds.add(reference.pubmedId);
+                    }
+                });
+            });
+        });
+        return pubmedIds.size;
+    }, [filteredRows]);
 
     const columns: Column<VUE>[] = useMemo(() => [
         {
@@ -98,7 +132,7 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
         {
             Header: 'Context & References',
             id: 'context',
-            accessor: (row: VUE) => getContextReferences(row),
+            accessor: (row: VUE) => renderContextAndReferences(extractContextAndReferences(row)),
             width: "43%",
             disableSortBy: true
         },
@@ -129,32 +163,42 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
         headerGroups,
         rows,
         prepareRow
-    } = useTable({ columns, data: vueData }, useSortBy);
+    } = useTable({ columns, data: filteredRows }, useSortBy);
 
     return (
-        <div>
-            {/* Search box */}
-            <div className="table-search-box">
-                <input
-                    type="text"
-                    placeholder="Search by Gene / Therapeutic Level / Effects / Context ..."
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                    style={{ padding: '5px', width: '85%', borderRadius: '5px', border: '1px solid #ccc', textAlign: 'center'}}
-                />
+        <div className='vue-table'>
+            <div style={{display: "flex", justifyContent: "space-between"}}>
+                {/* Summary */}
+                <span>
+                    <span className="search-summary-number">{curatedVUEsCount}</span>
+                    <span className="search-summary-text">curated VUEs in</span>
+                    <span className="search-summary-number">{uniqueGenesCount}</span>
+                    <span className="search-summary-text">genes from</span>
+                    <span className="search-summary-number">{uniqueArticlesCount}</span>
+                    <span className="search-summary-text">articles</span>
+                </span>
+                {/* Search box */}
+                <span className="table-search-box">
+                    <input
+                        type="text"
+                        placeholder="Search by Gene / Therapeutic Level / Effects / Context & References ..."
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
+                    />
+                </span>
             </div>
 
-            <Table {...getTableProps()} className="vue-table table-bordered table-hover">
-                <thead>
-                    {headerGroups.map(headerGroup => (
+            <Table {...getTableProps()} className="table-bordered table-hover">
+            <thead>
+            {headerGroups.map(headerGroup => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map((column: any) => (
                                 <th {...column.getHeaderProps(column.getSortByToggleProps())} 
-                                style={{
-                                    fontWeight: 'bold',
-                                    background: '#f1f1f1',
-                                    width: column.width
-                                }}
+                                    style={{
+                                        fontWeight: 'bold',
+                                        background: '#f1f1f1',
+                                        width: column.width
+                                    }}
                                 >
                                     <div style={{ cursor: 'pointer' }}>
                                         {column.render('Header')}
@@ -166,34 +210,21 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
                             ))}
                         </tr>
                     ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                    {rows.filter(row => {
-                        return row.cells.some(cell => {
-                            // search in comment column
-                            if (cell.column?.id === 'comment') {
-                                const revisedProteinEffectList = row.original.revisedProteinEffects?.map((e: { revisedProteinEffect: string }) => e.revisedProteinEffect) || [];
-                                const uniqueRevisedProteinEffectList = revisedProteinEffectList.filter((value: string, index: number, array: string[]) => array.indexOf(value) === index);
-                                return uniqueRevisedProteinEffectList.join(", ").toLowerCase().includes(searchInput.toLowerCase());
-                            } else if (cell.column?.id === 'context') {
-                                    return row.original.context.toLowerCase().includes(searchInput.toLowerCase());
-                            } else {
-                                // search in other columns
-                                return String(cell.value).toLowerCase().includes(searchInput.toLowerCase());
-                            }
-                        });
-                    }).map(row => {
+            </thead>
+            <tbody {...getTableBodyProps()}>
+            {rows.map(row => {
                         prepareRow(row);
                         return (
                             <tr {...row.getRowProps()}>
                                 {row.cells.map(cell => (
                                     <td {...cell.getCellProps()}>
-                                        {cell.render('Cell')}</td>
+                                        {cell.render('Cell')}
+                                    </td>
                                 ))}
                             </tr>
                         );
                     })}
-                </tbody>
+            </tbody>
             </Table>
         </div>
     );

@@ -1,12 +1,28 @@
 .vue-table > tbody > tr > td {
     vertical-align: middle;
 }
+
+.search-summary-number {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.search-summary-text {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
 .table-search-box {
+    width: 30%;
+}
+
+.table-search-box > input {
+    padding: 5px;
     width: 100%;
-    margin: 20px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 0.85rem;
 }
 .vue-table {
     width: 85%;

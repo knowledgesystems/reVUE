@@ -75,7 +75,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                             {i.references.map((ref, index) => (
                                 <div key={index}>
                                     {index > 0 && "; "}
-                                    {ref.pubmedId === 0 ? (
+                                    {Number(ref.pubmedId) === 0 ? (
                                         <>{ref.referenceText}</>
                                     ) : (
                                         <a href={`https://pubmed.ncbi.nlm.nih.gov/${ref.pubmedId}/`} rel="noreferrer" target="_blank">
