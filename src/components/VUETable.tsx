@@ -19,7 +19,7 @@ const therapeuticLevelSort = (rowA: Row<VUE>, rowB: Row<VUE>, columnId: string) 
     const valueA = rowA.values[columnId];
     const valueB = rowB.values[columnId];
 
-    const therapeuticLevelOrder = ['LEVEL_1', 'LEVEL_2', 'LEVEL_3', 'LEVEL_4', 'Oncogenic'];
+    const therapeuticLevelOrder = ['LEVEL_1', 'LEVEL_2', 'LEVEL_3', 'LEVEL_4', 'None'];
 
     const indexA = therapeuticLevelOrder.indexOf(valueA);
     const indexB = therapeuticLevelOrder.indexOf(valueB);

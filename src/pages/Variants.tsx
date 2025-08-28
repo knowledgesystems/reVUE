@@ -54,7 +54,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                         <td>{i.vepPredictedVariantClassification}</td>
                         <td>{i.revisedProteinEffect}</td>
                         <td>{i.revisedVariantClassification}</td>
-                        <td>{i.therapeuticLevel || "Oncogenic"}</td>
+                        <td>{i.therapeuticLevel || "None"}</td>
                         <td>{i.counts["mskimpact"].somaticVariantsCount + 
                              i.counts["mskimpact"].unknownVariantsCount + 
                              i.counts["mskimpact"].germlineVariantsCount +

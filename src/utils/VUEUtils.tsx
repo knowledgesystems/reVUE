@@ -112,7 +112,7 @@ export const renderContextAndReferences = (contextAndReferences: ContextAndRefer
 
 
 export const getHighestTherapeuticLevel = (vue: VUE) => {
-    let highestTherapeuticLevel = "Oncogenic";
+    let highestTherapeuticLevel = "None";
     let highestLevel = Infinity;
     vue.revisedProteinEffects?.forEach(e => {
         if (e.therapeuticLevel && parseInt(e.therapeuticLevel.split('_')[1]) < highestLevel) {
