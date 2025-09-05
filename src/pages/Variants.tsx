@@ -55,6 +55,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                         <td>{i.revisedProteinEffect}</td>
                         <td>{i.revisedVariantClassification}</td>
                         <td>{i.therapeuticLevel || "None"}</td>
+                        <td>{i.oncogenic || "None"}</td>
                         <td>{i.counts["mskimpact"].somaticVariantsCount + 
                              i.counts["mskimpact"].unknownVariantsCount + 
                              i.counts["mskimpact"].germlineVariantsCount +
@@ -69,7 +70,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                             <a href={`https://www.oncokb.org/hgvsg/${i.variant}`} rel="noreferrer" target="_blank">
                                 <img src={oncokbLogo} alt="oncokb-logo" style={{height: 16, marginRight: 10}} />
                             </a>
-                            {cbioportalLink(i.revisedProteinEffect.substring(2), gene)}
+                            {i.revisedProteinEffect && cbioportalLink(i.revisedProteinEffect.substring(2), gene)}
                         </td>
                         <td>
                             {i.references.map((ref, index) => (
@@ -133,6 +134,7 @@ export const Variants: React.FC<IVariantsProps> = (props) => {
                                 </OverlayTrigger>
                             </th>
                             <th>Therapeutic Level</th>
+                            <th>Oncogenic</th>
                             <th>MSK-IMPACT Variants Count
                                 <OverlayTrigger
                                     placement="right"

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { VUE } from '../model/VUE';
-import { cbioportalLink, extractContextAndReferences, getHighestTherapeuticLevel, renderContextAndReferences } from '../utils/VUEUtils';
+import { cbioportalLink, extractContextAndReferences, getHighestOncogenicLevel, getHighestTherapeuticLevel, renderContextAndReferences } from '../utils/VUEUtils';
 import vueLogo from "./../images/vue_logo.png";
 import gnLogo from '../images/gn-logo.png';
 import oncokbLogo from '../images/oncokb-logo.png';
@@ -99,6 +99,11 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
             sortType: therapeuticLevelSort,
             width: "10%"
         },
+                {
+            Header: 'Oncogenic',
+            accessor: (row: VUE) => getHighestOncogenicLevel(row),
+            width: "10%"
+        },
         {
             Header: 'Predicted Effect',
             accessor: 'defaultEffect',
@@ -145,10 +150,16 @@ const VUETable: React.FC<IVUETableProps> = (props) => {
                             <a href={`https://www.genomenexus.org/variant/${row.revisedProteinEffects[0].variant}`} rel="noreferrer" target="_blank">
                                 <img src={gnLogo} alt="gn-logo" style={{ height: 20, marginRight: 10 }} />
                             </a>
-                            <a href={`https://www.oncokb.org/hgvsg/${row.revisedProteinEffects[0].variant}`} rel="noreferrer" target="_blank">
-                                <img src={oncokbLogo} alt="oncokb-logo" style={{ height: 16, marginRight: 10 }} />
-                            </a>
-                            {cbioportalLink(row.revisedProteinEffects[0].revisedProteinEffect.substring(2), row.hugoGeneSymbol)}
+                            {row.revisedProteinEffects[0] && (
+                                <>
+                                    <a href={`https://www.oncokb.org/hgvsg/${row.revisedProteinEffects[0].variant}`} rel="noreferrer" target="_blank">
+                                        <img src={oncokbLogo} alt="oncokb-logo" style={{ height: 16, marginRight: 10 }} />
+                                    </a>
+                                    {row.revisedProteinEffects[0].revisedProteinEffect &&
+                                        cbioportalLink(row.revisedProteinEffects[0].revisedProteinEffect.substring(2), row.hugoGeneSymbol)
+                                    }
+                                </>
+                            )}
                         </>
                     )}
                 </>
