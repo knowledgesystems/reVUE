@@ -22,7 +22,7 @@ export const cbioportalLink = (proteinChange: string, gene?: string, ) => {
 export const fetchVueData = async (): Promise<VUE[]> => {
     try {
         const response = await fetch(
-            'https://raw.githubusercontent.com/knowledgesystems/reVUE-data/b49aac76e5e27d94dc059b67f22556c2792d31ad/VUEs.json'
+            'https://raw.githubusercontent.com/knowledgesystems/reVUE-data/e749cb7c9d64cd7c3e1a792744e7c781b73f0685/generated/VUEs.json'
         );
         let vues: VUE[] = await response.json();
         // Sort VUEs by genes in alphabetical order
@@ -112,7 +112,7 @@ export const renderContextAndReferences = (contextAndReferences: ContextAndRefer
 
 
 export const getHighestTherapeuticLevel = (vue: VUE) => {
-    let highestTherapeuticLevel = "Oncogenic";
+    let highestTherapeuticLevel = "None";
     let highestLevel = Infinity;
     vue.revisedProteinEffects?.forEach(e => {
         if (e.therapeuticLevel && parseInt(e.therapeuticLevel.split('_')[1]) < highestLevel) {
@@ -122,4 +122,34 @@ export const getHighestTherapeuticLevel = (vue: VUE) => {
     });
     return highestTherapeuticLevel;
 }
+
+export const getHighestOncogenicLevel = (vue: VUE) => {
+    // Define the ranking: lower index = higher oncogenicity
+    const ranking: Record<string, number> = {
+        "Oncogenic": 1,
+        "Likely Oncogenic": 2,
+        "Predicted Oncogenic": 3,
+        "Resistance": 4,
+        "Likely Neutral": 5,
+        "Predicted Neutral": 6,
+        "Inconclusive": 7,
+        "Unknown": 8,
+        "None": 9
+    };
+
+    let highestOncogenicLevel = "None";
+    let bestRank = ranking["None"];
+
+    vue.revisedProteinEffects?.forEach(e => {
+        const level = e.oncogenic ?? "None";
+        const rank = ranking[level] ?? ranking["None"];
+        if (rank < bestRank) {
+            bestRank = rank;
+            highestOncogenicLevel = level;
+        }
+    });
+
+    return highestOncogenicLevel;
+}
+
 export const revisedProteinEffectSortingFn = (a: RevisedProteinEffect, b: RevisedProteinEffect) => {return (b.counts["mskimpact"].somaticVariantsCount + b.counts["mskimpact"].unknownVariantsCount) - (a.counts["mskimpact"].somaticVariantsCount + a.counts["mskimpact"].unknownVariantsCount)};

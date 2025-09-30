@@ -34,6 +34,7 @@ export type RevisedProteinEffect = {
         unknownVariantsCountByCancerType: {};
     }};
     therapeuticLevel: string;
+    oncogenic: string;
 }
 
 export type Reference = {
