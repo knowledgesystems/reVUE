@@ -22,7 +22,7 @@ export const cbioportalLink = (proteinChange: string, gene?: string, ) => {
 export const fetchVueData = async (): Promise<VUE[]> => {
     try {
         const response = await fetch(
-            'https://raw.githubusercontent.com/knowledgesystems/reVUE-data/e749cb7c9d64cd7c3e1a792744e7c781b73f0685/generated/VUEs.json'
+            'https://raw.githubusercontent.com/knowledgesystems/reVUE-data/refs/heads/main/generated/VUEs.json'
         );
         let vues: VUE[] = await response.json();
         // Sort VUEs by genes in alphabetical order
